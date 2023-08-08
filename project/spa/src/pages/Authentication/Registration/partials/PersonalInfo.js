@@ -10,7 +10,7 @@ function PersonalInfo() {
         password: '',
         confirm: ''
     })
-    const [registerCompany, setRegisterCompany] = useState(company)
+    const [registerCompany, setRegisterCompany] = useState({...company})
     const dispatch = useDispatch()
     return (
         <>
@@ -47,7 +47,7 @@ function PersonalInfo() {
                     </div>
                     <div>
                         <label for="confirm-password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Confirm password</label>
-                        <input type="password" name="confirm-password" id="confirm-password" value={registerUser.confirm} onChange={(event) => { setRegisterUser({...registerUser, confirm: event.target.value});dispatch(storeUser(registerUser)) }} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="•••••••••" required="" />
+                        <input type="password" name="confirm-password" id="confirm-password" value={registerUser.confirm} onChange={(event) => { setRegisterUser({...registerUser, confirm: event.target.value});dispatch(storeUser({...registerUser, confirm: event.target.value})) }} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="•••••••••" required="" />
                         <p className={registerUser.password !== registerUser.confirm ? "text-red-700 text-xs ml-2" : "hidden"}>password did not match</p>
                     </div>
                 </div>

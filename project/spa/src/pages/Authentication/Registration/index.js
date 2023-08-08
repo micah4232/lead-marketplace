@@ -9,7 +9,7 @@ import { RegisterAPI } from "./api";
 
 function Registration() {
     const user = useSelector((state) => state.authentication.user);
-    const company = useSelector((state) => state.authentication.comapny)
+    const company = useSelector((state) => state.authentication.company)
     const [step, setStep] = useState(0);
     const onClickButton = (payload) => {
         // store payload?
