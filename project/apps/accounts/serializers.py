@@ -7,7 +7,7 @@ from rest_framework.settings import api_settings
 from django.contrib.auth.password_validation import validate_password
 from django.core import exceptions as django_exceptions
 
-from .models import Company, Profile
+from .models import Company, Profile, MainCategory, SubCategory, ServiceCategories, ZipCode, CompanyZipModel
 
 User = get_user_model()
 
@@ -86,3 +86,24 @@ class RegistrationSerializer(UserCreateSerializer):
                 user.is_active = False
                 user.save(update_fields=["is_active"])
         return user
+
+class MainCategorySerializers(serializers.ModelSerializer):
+    class Meta:
+        model = MainCategory
+        fields = '__all__'
+
+
+class SubCategorySerializers(serializers.ModelSerializer):
+    class Meta:
+        model = SubCategory
+        fields = '__all__'
+
+class ServiceCategorySerializers(serializers.ModelSerializer):
+    class Meta:
+        model = ServiceCategories
+        fields = '__all__'
+
+class ZipCodeSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = ZipCode
+        fields = '__all__'

@@ -1,29 +1,38 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import PersonalInfo from "./partials/PersonalInfo"
 import CustomerInfo from "./partials/CustomerInfo";
 import YourSettings from "./partials/YourSettings";
 import AccountInfo from "./partials/AccountInfo";
 import { useSelector } from "react-redux";
 
-import { RegisterAPI } from "./api";
+import { RegisterAPI, GetMainCategories } from "./api";
+import { storeMainCategories } from "../reducers/categoriesReducer";
+import { useDispatch } from "react-redux";
 
 function Registration() {
     const user = useSelector((state) => state.authentication.user);
     const company = useSelector((state) => state.authentication.company)
-    const [step, setStep] = useState(0);
+    const mainCategories = useSelector((state) => state.category.mainCategories)
+    const [step, setStep] = useState(1);
+    const dispatch = useDispatch
+
+    
+
     const onClickButton = (payload) => {
         // store payload?
         let istep = step;
         
         if (istep === 0) {
+            setStep(istep + 1)
             RegisterAPI({...user, company: {...company}}).then(response => {
-                console.log(response.data);
                 if (response.status === 201) {
                     setStep(istep + 1)
                 }
             }).catch(error => {
                 console.log('Have some error here!')
             });
+        } else {
+            setStep(istep + 1)
         }
     }
 

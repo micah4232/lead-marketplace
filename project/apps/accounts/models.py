@@ -9,7 +9,7 @@ class ZipCode(models.Model):
     updated_at = models.DateTimeField(auto_now=True, auto_now_add=False)
 
     def __str__(self) -> str:
-        return super().code
+        return self.code
 
 class MainCategory(models.Model):
     name = models.CharField(max_length=255)
@@ -17,7 +17,7 @@ class MainCategory(models.Model):
     updated_at = models.DateTimeField(auto_now=True, auto_now_add=False)
 
     def __str__(self) -> str:
-        return super().name
+        return self.name
     
 
 class SubCategory(models.Model):
@@ -27,7 +27,7 @@ class SubCategory(models.Model):
     updated_at = models.DateTimeField(auto_now=True, auto_now_add=False)
 
     def __str__(self) -> str:
-        return super().name
+        return self.name
 
 class ServiceCategories(models.Model):
     name = models.CharField(max_length=255)
@@ -36,7 +36,7 @@ class ServiceCategories(models.Model):
     updated_at = models.DateTimeField(auto_now=True, auto_now_add=False)
 
     def __str__(self) -> str:
-        return super().name
+        return self.name
 
 # Create your models here.
 class Company(models.Model):
@@ -47,7 +47,7 @@ class Company(models.Model):
     updated_at = models.DateTimeField(auto_now_add=False, auto_now=True)
 
     def __str__(self) -> str:
-        return super().name
+        return self.name
 
 
 class Profile(models.Model):
