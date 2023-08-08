@@ -16,13 +16,13 @@ function Registration() {
         let istep = step;
         
         if (istep === 0) {
-            RegisterAPI({...user, ...company}).then(response => {
+            RegisterAPI({...user, company: {...company}}).then(response => {
                 console.log(response.data);
                 if (response.status === 201) {
                     setStep(istep + 1)
                 }
             }).catch(error => {
-                console.log(error.response)
+                console.log('Have some error here!')
             });
         }
     }
