@@ -54,8 +54,17 @@ class Profile(models.Model):
     company = models.OneToOneField(Company, on_delete=models.SET_NULL, null=True)
     user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True)
 
+class RadiusZipCode(models.Model):
+    name = models.CharField(max_length=255)
+    main_zip = models.IntegerField(null=True, blank=True)
+    radius_miles = models.IntegerField(null=True, blank=True)
+    company = models.ForeignKey(Company, on_delete=models.SET_NULL, null=True)
+    zip_codes = models.ManyToManyField(ZipCode, through='CompanyZipModel')
+
+    def __str__(self) -> str:
+        return self.name
 
 class CompanyZipModel(models.Model):
-    company = models.ForeignKey(Company, on_delete=models.SET_NULL, null=True)
+    radius_zip_code = models.ForeignKey(RadiusZipCode, on_delete=models.SET_NULL, null=True)
     zip_code = models.ForeignKey(ZipCode, on_delete=models.SET_NULL, null=True)
     

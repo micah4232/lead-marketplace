@@ -11,3 +11,7 @@ export const GetMainCategories = () => {
 export const GetSubCategoriesByMainId = (id) => {
     return axios.get(`company/sub-category/${id}/`)
 }
+
+export const GetZipCode = (code, distance) => {
+    return axios.get(`company/get-zipcode/${code}/${distance}/`)
+}

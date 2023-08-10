@@ -7,7 +7,16 @@ from rest_framework.settings import api_settings
 from django.contrib.auth.password_validation import validate_password
 from django.core import exceptions as django_exceptions
 
-from .models import Company, Profile, MainCategory, SubCategory, ServiceCategories, ZipCode, CompanyZipModel
+from .models import (
+    Company, 
+    Profile, 
+    MainCategory, 
+    SubCategory, 
+    ServiceCategories, 
+    ZipCode,
+    RadiusZipCode,
+    CompanyZipModel
+)
 
 User = get_user_model()
 
@@ -107,3 +116,20 @@ class ZipCodeSerializers(serializers.ModelSerializer):
     class Meta:
         model = ZipCode
         fields = '__all__'
+
+
+class CompanyZipSerializer(serializers.ModelSerializer):
+    zip_codes = ZipCodeSerializers(many=True)
+
+    class Meta:
+        models = RadiusZipCode
+        fields = '__all__'
+
+    def create(self, validated_data):
+        zipcodes = validated_data.pop('zip_codes')
+        obj = RadiusZipCode.objects.create(**validated_data)
+        for zipcode in zipcodes:
+            zipp = ZipCode.objects.get_or_create(**zipcode)
+            CompanyZipModel.objects.create(zip_code=zipp, radius_zip_code=obj)
+        
+        return obj
