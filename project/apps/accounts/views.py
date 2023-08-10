@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView
 from rest_framework.views import APIView
 from django.http import JsonResponse
 from django.conf import settings
@@ -34,6 +34,14 @@ class RetrieveUpdateDestroySubCategoryAPIView(RetrieveUpdateDestroyAPIView):
 class ListCreateServiceCategoryAPIView(ListCreateAPIView):
     queryset = ServiceCategories.objects.all()
     serializer_class = ServiceCategorySerializers
+
+
+class ListServicesBySubCategoryAPIView(ListAPIView):
+    serializer_class = ServiceCategorySerializers
+
+    def get_queryset(self):
+        sub_id = self.kwargs.get('id', '')
+        return ServiceCategories.objects.filter(sub_category__id=sub_id)
 
 # getting zipcode here
 

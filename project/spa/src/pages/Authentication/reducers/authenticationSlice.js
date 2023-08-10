@@ -13,7 +13,11 @@ export const authenticationSlice = createSlice({
             'name' : '',
             'website' : '',
             'phone_number' : ''
-        }
+        },
+        zipCodeList: [],
+        isRegistering: false,
+        isVerified: false,
+        step: 0
     },
     reducers: {
         storeUser: (state, action) => {
@@ -21,10 +25,22 @@ export const authenticationSlice = createSlice({
         },
         storeCompany : (state, action) => {
             state.company = action.payload
+        },
+        storeIsRegistering: (state, action) => {
+            state.isRegistering = action.payload
+        },
+        storeIsVerified: (state, action) => {
+            state.isVerified = action.payload;
+        },
+        storeStep: (state, action) => {
+            state.step = action.payload;
+        },
+        storeZipCodeList: (state, action) => {
+            state.zipCodeList = action.payload
         }
     }
 });
 
-export const { storeUser, storeCompany } = authenticationSlice.actions
+export const { storeUser, storeCompany, storeIsRegistering, storeIsVerified, storeStep } = authenticationSlice.actions
 
 export default authenticationSlice.reducer

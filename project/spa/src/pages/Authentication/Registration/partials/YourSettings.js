@@ -1,9 +1,40 @@
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import Select from 'react-select';
+import { GetServiceBySub } from '../api';
+
 function YourSettings() {
+    const selectedSub = useSelector((state) => state.category.selectedSub)
+    const [services, setServices] = useState([
+        {value: '1', label: 'samok' }
+    ]);
+
+    useEffect(() => {
+
+        if (selectedSub) {
+            GetServiceBySub(selectedSub).then(response => {
+                if (response.status === 200) {
+                    const temp = response.data;
+                    const tempList = []
+                    temp.map(obj => tempList.push({value: obj.id, label: obj.name}));
+                    setServices(tempList);
+                }
+            })
+        }
+
+    }, [])
+
     return (
         <div>
             <h2 className="text-center font-bold text-xl">Your Settings</h2>
             <h3 className="text-left font-bold text-xl">Cost Prepaid</h3>
             <p>Your cost per lead (CPL) is what you are bidding to acquire a Lead. The more aggressive your CPL, the more likely you are to win new Leads,. We've suggested a starting point below, but you can always adjust your CPL at any time per lead depends on the category </p>
+            {
+                (selectedSub === null) ? <p className="text-sm text-red-500">Please make sure to select Sub category</p> : null
+            }
+            <Select options={services} isMulti className='w-full mt-5' onChange={(newValue) => {
+                
+            }} />
             <h3 className="text-left font-bold text-xl mt-10">Lead Delivery</h3>
             <p>The Phone Number where you want to receive your leads.</p>
             <div>

@@ -5,7 +5,10 @@ export const categoriesSlice = createSlice({
     initialState: {
         mainCategories: [],
         subCategories: [],
-        servicesCategories: []
+        servicesCategories: [],
+        selectedMain: null,
+        selectedSub: null,
+        selectedServices: []
     },
     reducers: {
         storeMainCategories: (state, action) => {
@@ -16,10 +19,26 @@ export const categoriesSlice = createSlice({
         },
         storeServices: (state, action) => {
             state.servicesCategories = action.payload;
+        },
+        storeSelectedSub: (state, action) => {
+            state.selectedSub = action.payload;
+        },
+        storeSelectedMain: (state, action) => {
+            state.selectedMain = action.payload;
+        },
+        storeSelectedServices: (state, action) => {
+            state.selectedServices = action.payload;
         }
     }
 });
 
-export const { storeMainCategories, storeSubCategories, storeServices } = categoriesSlice.actions;
+export const { 
+    storeMainCategories, 
+    storeSubCategories, 
+    storeServices, 
+    storeSelectedSub, 
+    storeSelectedMain,
+    storeSelectedServices
+} = categoriesSlice.actions;
 
 export default categoriesSlice.reducer;

@@ -3,30 +3,37 @@ import "leaflet/dist/leaflet.css"
 import markerIconPng from "leaflet/dist/images/marker-icon.png"
 import {Icon} from 'leaflet'
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { storeMainCategories, storeSelectedMain, storeSelectedSub, storeSubCategories } from '../../reducers/categoriesReducer';
 import { GetMainCategories, GetSubCategoriesByMainId, GetZipCode } from '../api';
 import { Button, Label, Modal, Spinner, TextInput } from 'flowbite-react';
 import ZipCard from './components/zipCard';
+import { useSelector } from 'react-redux';
 
 
 function CustomerInfo() {
     const [position, setPosition] = useState(null);
-    const [main, setMain] = useState([])
-    const [sub, setSub] = useState([])
-    const [selectedMain, setSelectedMain] = useState('default')
     const [openModal, setModal] = useState(false)
     const [zipCodes, setZipCodes] = useState([])
     const [spinZip, setSpinZip] = useState(false)
     const [zip, setZip] = useState()
     const [distance, setDistance] = useState()
     const [zipModel, setZipModel] = useState({code: '', city: '', state: ''})
+    
+    const mainCategories = useSelector((state) => state.category.mainCategories)
+    const subCategories = useSelector((state) => state.category.subCategories)
+    const selectedMain = useSelector((state) => state.category.selectedMain)
+    const selectedSub = useSelector((state) => state.category.selectedSub)
+    const dispatch = useDispatch()
 
     useEffect(() => {
-        GetMainCategories().then(response => {
-            setMain(response.data)
-        }).catch(error => {
-            console.log('error on getting main categories')
-        })
+        if (mainCategories.length == 0) {
+            GetMainCategories().then(response => {
+                dispatch(storeMainCategories(response.data))
+            }).catch(error => {
+                console.log('error on getting main categories')
+            })
+        }
     }, []);
 
     function LocationMarker() {
@@ -76,26 +83,29 @@ function CustomerInfo() {
             <p className="text-center">Thanks for confirming your email. Now let's find you the right customers.</p>
             <label for="main" className="block mb-2 mt-5 text-xl font-bold text-gray-900 dark:text-white">Your Services</label>
             <p>Select Main Category</p>
-            <select id="main" defaultValue={'default'} onChange={(event) => {
-                console.log(event.target.value);
-                setSelectedMain(event.target.value);
-                    GetSubCategoriesByMainId(event.target.value).then(response => {
-                        setSub(response.data)
-                    }).catch(error => {
-                        console.log(error)
-                    })
+            <select id="main" value={selectedMain} onChange={(event) => {
+                    dispatch(storeSelectedMain(event.target.value));
+                    if (subCategories.length === 0) {
+                        GetSubCategoriesByMainId(event.target.value).then(response => {
+                            dispatch(storeSubCategories(response.data))
+                        }).catch(error => {
+                            console.log(error)
+                        })
+                    }
                 }
             } className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
             <option value="default">Choose your Main Category</option>
             {
-                main.map(obj => <option key={obj.id} value={obj.id}>{ obj.name }</option>)
+                mainCategories.map(obj => <option key={obj.id} value={obj.id}>{ obj.name }</option>)
             }
             </select>
-            <label for="countries" className="block mb-2 mt-5 text-sm font-medium text-gray-900 dark:text-white">Select you desired Service Categories</label>
-            <select id="countries" defaultValue={'default'} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <label for="sub-categories" className="block mb-2 mt-5 text-sm font-medium text-gray-900 dark:text-white">Select you desired Service Categories</label>
+            <select id="sub-categories" value={selectedSub} onChange={(event) => {
+                dispatch(storeSelectedSub(event.target.value));
+            }} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
             <option value="default">Select Sub Categories</option>
             {
-                sub.map(obj => <option key={obj.id} value={obj.id}>{obj.name}</option>)
+                subCategories.map(obj => <option key={obj.id} value={obj.id}>{obj.name}</option>)
             }
             </select>
             <div className="mt-5">
