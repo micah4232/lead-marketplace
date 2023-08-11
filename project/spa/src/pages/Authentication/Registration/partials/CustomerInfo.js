@@ -5,10 +5,11 @@ import {Icon} from 'leaflet'
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { storeMainCategories, storeSelectedMain, storeSelectedSub, storeSubCategories } from '../../reducers/categoriesReducer';
-import { GetMainCategories, GetSubCategoriesByMainId, GetZipCode } from '../api';
+import { GetCompanyIdByUser, GetMainCategories, GetSubCategoriesByMainId, GetZipCode } from '../api';
 import { Button, Label, Modal, Spinner, TextInput } from 'flowbite-react';
 import ZipCard from './components/zipCard';
 import { useSelector } from 'react-redux';
+import { storeCompany } from '../../reducers/authenticationSlice';
 
 
 function CustomerInfo() {
@@ -24,6 +25,8 @@ function CustomerInfo() {
     const subCategories = useSelector((state) => state.category.subCategories)
     const selectedMain = useSelector((state) => state.category.selectedMain)
     const selectedSub = useSelector((state) => state.category.selectedSub)
+    const company = useSelector((state) => state.authentication.company)
+    const user = useSelector((state) => state.authentication.user)
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -32,6 +35,14 @@ function CustomerInfo() {
                 dispatch(storeMainCategories(response.data))
             }).catch(error => {
                 console.log('error on getting main categories')
+            })
+        }
+        if (company.id === undefined && user.id !== undefined) {
+            GetCompanyIdByUser(user.id).then(response => {
+                const tempComp = company;
+                dispatch(storeCompany({...tempComp, id: response.data.company}));
+            }).catch(error => {
+                console.log('error brad!')
             })
         }
     }, []);
@@ -65,7 +76,9 @@ function CustomerInfo() {
         })
     }
 
-    
+    const onClickAddZipCode = () => {
+        setModal(true);
+    }
 
     const onAddZipCode = () => {
         if (zipModel.code != '') {
@@ -113,7 +126,7 @@ function CustomerInfo() {
                 <p>Define your Service Area with Starting Zip Code and Radius.</p>
                 <p>If needed, refine your Service Area-add or remove Zip Code Areas from the map by clicking on them.</p>
             </div>
-            <div className='grid grid-cols-2 gap-4 mt-5'>
+            <div className='grid grid-cols-2 gap-5 mt-5'>
                 <div className="grid grid-cols-3 gap-2">
                     <div>
                         <label for="zipCode" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Zip Code</label>
@@ -166,6 +179,9 @@ function CustomerInfo() {
                     </div>
                 </div>
                 <div>
+                    <div className='flex content-end items-end pt-7'>
+                        <Button onClick={onClickAddZipCode}>Add Zip Code</Button>
+                    </div>
                 </div>
             </div>
             <div className='mt-10'>

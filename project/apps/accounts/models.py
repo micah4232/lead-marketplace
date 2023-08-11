@@ -43,6 +43,7 @@ class Company(models.Model):
     name = models.CharField(max_length=255)
     website = models.URLField()
     phone_number_for_lead = models.CharField(max_length=16, null=True, blank=True)
+    category = models.ForeignKey(MainCategory, on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(auto_now=False, auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=False, auto_now=True)
 

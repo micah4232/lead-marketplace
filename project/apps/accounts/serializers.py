@@ -28,6 +28,7 @@ class CompanySerializer(serializers.ModelSerializer):
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
+        fields = '__all__'
 
 class RegistrationSerializer(UserCreateSerializer):
     password = serializers.CharField(style={"input_type": "password"}, write_only=True)

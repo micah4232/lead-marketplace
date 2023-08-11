@@ -19,3 +19,7 @@ export const GetZipCode = (code, distance) => {
 export const GetServiceBySub = (id) => {
     return axios.get(`company/services/${id}/`)
 }
+
+export const GetCompanyIdByUser = (id) => {
+    return axios.get(`company/get-company-id-by-user/${id}/`)
+}

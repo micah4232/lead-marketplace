@@ -67,7 +67,10 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'spa', 'build')],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'spa', 'build'),
+            os.path.join(BASE_DIR, 'templates')
+            ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -149,6 +152,8 @@ ZIP_CODE_API_KEY = env("ZIP_CODE_API_KEY")
 #     },
 # }
 
+FRONTEND_URL = 'http://localhost:3000'
+
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
@@ -178,9 +183,12 @@ CORS_ALLOW_HEADERS = (
 DJOSER = {
     'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
     'USERNAME_RESET_CONFIRM_URL': '#/username/reset/confirm/{uid}/{token}',
-    'ACTIVATION_URL': '#/activate/{uid}/{token}',
+    'ACTIVATION_URL': 'activate/{uid}/{token}/',
     'SEND_ACTIVATION_EMAIL': True,
     'SERIALIZERS': {
         'user_create' : 'apps.accounts.serializers.RegistrationSerializer'
     },
+    'EMAIL' : {
+        'activation' : 'apps.accounts.email.ActivateEmail'
+    }
 }

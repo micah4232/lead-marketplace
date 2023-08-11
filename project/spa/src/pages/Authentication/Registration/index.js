@@ -13,19 +13,35 @@ import { storeIsRegistering, storeStep, storeUser } from "../reducers/authentica
 function Registration() {
     const user = useSelector((state) => state.authentication.user);
     const steps = useSelector((state) => state.authentication.step);
+    const isVerified = useSelector((state) => state.authentication.isVerified)
     const company = useSelector((state) => state.authentication.company)
-    const mainCategories = useSelector((state) => state.category.mainCategories)
     const [error,setError] = useState()
     const [step, setStep] = useState(steps);
+    
+
     const dispatch = useDispatch()
 
-    
+    const buttonString = () => {
+
+        let butt = 'Next'
+
+        if (steps === 0 && user.id === undefined) {
+            butt = 'Create User'
+        }
+
+        if (steps === 0 && user.id !== undefined && isVerified === false) {
+            butt = 'Verify'
+        }
+
+        return butt
+    }
 
     const onClickButton = (payload) => {
         // store payload?
         let istep = steps;
         
         if (istep === 0) {
+            console.log('step 0')
             if (user.id === undefined) {
                 RegisterAPI({...user, company: {...company}}).then(response => {
                     if (response.status === 201) {
@@ -36,17 +52,21 @@ function Registration() {
                             first_name: user.first_name,
                             last_name: user.last_name
                         }))
-                        dispatch(storeStep(istep + 1))
+                        
                         dispatch(storeIsRegistering(true));
                     }
                 }).catch(error => {
                     console.log('Have some error here!')
                 });
-            } else {
+            }
+
+            if (isVerified) {
                 dispatch(storeStep(istep + 1))
             }
-        } else {
-            dispatch(storeStep(istep + 1))
+        }
+        if (steps === 1) {
+            // linking categories to your company
+            
         }
     }
 
@@ -120,7 +140,7 @@ function Registration() {
                         </button> : null
                         }
                         <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={onClickButton}>
-                            Create User
+                            {buttonString()}
                         </button>
                     </div>
                 </div>

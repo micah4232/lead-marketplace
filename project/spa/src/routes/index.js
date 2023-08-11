@@ -14,7 +14,7 @@ const router = createBrowserRouter([
         element: <Login />
     },
     {
-        path: "/verify/:uuid/:token/",
+        path: "/activate/:uuid/:token/",
         element: <VerifyEmail />
     },
     {

@@ -1,13 +1,25 @@
 from django.shortcuts import render
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView, RetrieveAPIView
 from rest_framework.views import APIView
 from django.http import JsonResponse
 from django.conf import settings
 import requests as req
-from .models import MainCategory, SubCategory, ServiceCategories
-from .serializers import MainCategorySerializers, SubCategorySerializers, ServiceCategorySerializers
+from .models import MainCategory, SubCategory, ServiceCategories, Profile
+from .serializers import (
+    MainCategorySerializers, 
+    SubCategorySerializers, 
+    ServiceCategorySerializers,
+    ProfileSerializer
+)
 
 # Create your views here.
+class GetProfileAPIView(RetrieveAPIView):
+    serializer_class = ProfileSerializer
+    
+    def get_object(self):
+        user_id = self.kwargs.get('id', '')
+        return Profile.objects.get(user__id=user_id)
+
 class ListCreateMainCategoryAPIView(ListCreateAPIView):
     queryset = MainCategory.objects.all()
     serializer_class = MainCategorySerializers
