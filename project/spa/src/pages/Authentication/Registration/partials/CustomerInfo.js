@@ -5,11 +5,12 @@ import {Icon} from 'leaflet'
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { storeMainCategories, storeSelectedMain, storeSelectedSub, storeSubCategories } from '../../reducers/categoriesReducer';
-import { GetCompanyIdByUser, GetMainCategories, GetSubCategoriesByMainId, GetZipCode } from '../api';
+import { CreateCompanyZipCodeList, GetCompanyIdByUser, GetMainCategories, GetSubCategoriesByMainId, GetZipCode } from '../api';
 import { Button, Label, Modal, Spinner, TextInput } from 'flowbite-react';
 import ZipCard from './components/zipCard';
 import { useSelector } from 'react-redux';
-import { storeCompany } from '../../reducers/authenticationSlice';
+import * as _ from 'lodash'
+import { storeCompany, storeCompanyZipCode, storeZipCodeList } from '../../reducers/authenticationSlice';
 
 
 function CustomerInfo() {
@@ -19,6 +20,7 @@ function CustomerInfo() {
     const [spinZip, setSpinZip] = useState(false)
     const [zip, setZip] = useState()
     const [distance, setDistance] = useState()
+    const [zipName, setZipName] = useState()
     const [zipModel, setZipModel] = useState({code: '', city: '', state: ''})
     
     const mainCategories = useSelector((state) => state.category.mainCategories)
@@ -27,6 +29,7 @@ function CustomerInfo() {
     const selectedSub = useSelector((state) => state.category.selectedSub)
     const company = useSelector((state) => state.authentication.company)
     const user = useSelector((state) => state.authentication.user)
+    const zipCodeList = useSelector((state) => state.authentication.zipCodeList)
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -65,15 +68,18 @@ function CustomerInfo() {
     }
 
     const onClickFindZip = () => {
-        setSpinZip(true)
-        GetZipCode(zip, distance).then(response => {
-            if (response.status == 200) {
-                setZipCodes(response.data.results)
-                setSpinZip(false)
-                // set all the data of zip code near him.
-                setModal(true);
-            }
-        })
+        if (zipCodes.length === 0) {
+            setSpinZip(true)
+            GetZipCode(zip, distance).then(response => {
+                if (response.status == 200) {
+                    setZipCodes(response.data.results)
+                    setSpinZip(false)
+                    // set all the data of zip code near him.
+                    setModal(true);
+                }
+            })
+        }
+        setModal(true);
     }
 
     const onClickAddZipCode = () => {
@@ -88,8 +94,32 @@ function CustomerInfo() {
             setZipModel({code: '', city: '', state: ''})
         }
     }
-    
 
+    const onSaveZipCodeGroup = () => {
+        const data = {
+            name: zipName,
+            main_zip : zip,
+            radius_miles : distance,
+            company: company.id,
+            zip_codes: zipCodes
+        }
+        CreateCompanyZipCodeList(data).then((response) => {
+            if (response.status === 201) {
+                const temp = zipCodeList
+                _.debounce(dispatch(storeZipCodeList(temp.push(response.data))))
+                // after dispatch clear all
+                setZipName('')
+                setZip('')
+                setDistance('')
+                setZipCodes([])
+                setModal(false)
+            }
+        }).catch(error => {
+            console.log(error)
+        });
+        
+    }
+    
     return (
         <>
             <h1 className="text-center font-bold text-xl">Your Customers</h1>
@@ -147,7 +177,7 @@ function CustomerInfo() {
                                 <Modal.Body>
                                     <div className="mt-5 mb-5">
                                         <Label htmlFor='name' value='Name'/>
-                                        <TextInput type="text" placeholder='Name'/>
+                                        <TextInput type="text" placeholder='Name' value={zipName} onChange={(event) => setZipName(event.target.value)}/>
                                         <p className='text-xs ml-2'>Name your set of zipcodes</p>
                                     </div>
                                     <div className="mt-5 mb-5 grid grid-cols-4 gap-4">
@@ -168,7 +198,7 @@ function CustomerInfo() {
                                     <div className="text-right mt-5">
                                         {/* <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" /> */}
                                         <div className="flex justify-end gap-4">
-                                        <Button color="success" onClick={() => setModal(false)}>
+                                        <Button color="success" onClick={onSaveZipCodeGroup}>
                                             Save
                                         </Button>
                                         </div>
@@ -182,6 +212,14 @@ function CustomerInfo() {
                     <div className='flex content-end items-end pt-7'>
                         <Button onClick={onClickAddZipCode}>Add Zip Code</Button>
                     </div>
+                </div>
+            </div>
+            <div>
+                <h1 className='text-xl font-bold pt-2 pb-2'>Zip Code Lists</h1>
+                <div className='mt-2'>
+                    {
+                        zipCodeList.map(obj => <span className='p-2 bg-gray-400 mr-2'>{obj.name}</span>)
+                    }
                 </div>
             </div>
             <div className='mt-10'>

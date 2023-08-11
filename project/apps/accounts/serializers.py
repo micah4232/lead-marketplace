@@ -15,7 +15,8 @@ from .models import (
     ServiceCategories, 
     ZipCode,
     RadiusZipCode,
-    CompanyZipModel
+    CompanyZipModel,
+    CompanyServices
 )
 
 User = get_user_model()
@@ -120,10 +121,10 @@ class ZipCodeSerializers(serializers.ModelSerializer):
 
 
 class CompanyZipSerializer(serializers.ModelSerializer):
-    zip_codes = ZipCodeSerializers(many=True)
+    zip_codes = ZipCodeSerializers(many=True, write_only=True)
 
     class Meta:
-        models = RadiusZipCode
+        model = RadiusZipCode
         fields = '__all__'
 
     def create(self, validated_data):
@@ -131,6 +132,22 @@ class CompanyZipSerializer(serializers.ModelSerializer):
         obj = RadiusZipCode.objects.create(**validated_data)
         for zipcode in zipcodes:
             zipp = ZipCode.objects.get_or_create(**zipcode)
-            CompanyZipModel.objects.create(zip_code=zipp, radius_zip_code=obj)
-        
-        return obj
+            CompanyZipModel.objects.create(zip_code=zipp[0], radius_zip_code=obj)
+        validated_data['zip_codes'] = zipcodes
+        return validated_data
+    
+    
+class CompanyServcesSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
+    services = ServiceCategorySerializers(many=True)
+    class Meta:
+        model = CompanyServices
+        fields = ['services', 'id']
+
+    def create(self, validated_data):
+        company_id = validated_data.pop('id')
+        company_obj = Company.object.get(company_id)
+        for service in validated_data:
+            service_obj = ServiceCategories.objects.get(service)
+            CompanyServices.objects.create(company=company_obj, service=service_obj)
+        return validated_data

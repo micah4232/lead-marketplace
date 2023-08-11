@@ -23,3 +23,7 @@ export const GetServiceBySub = (id) => {
 export const GetCompanyIdByUser = (id) => {
     return axios.get(`company/get-company-id-by-user/${id}/`)
 }
+
+export const CreateCompanyZipCodeList = (payload) => {
+    return axios.post('company/zipcode-list/', payload)
+}

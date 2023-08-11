@@ -8,7 +8,8 @@ import { useSelector } from "react-redux";
 import { RegisterAPI, GetMainCategories } from "./api";
 import { storeMainCategories } from "../reducers/categoriesReducer";
 import { useDispatch } from "react-redux";
-import { storeIsRegistering, storeStep, storeUser } from "../reducers/authenticationSlice";
+import { storeIsRegistering, storeLoggedIn, storeStep, storeUser } from "../reducers/authenticationSlice";
+import { useNavigate } from "react-router-dom";
 
 function Registration() {
     const user = useSelector((state) => state.authentication.user);
@@ -18,7 +19,7 @@ function Registration() {
     const [error,setError] = useState()
     const [step, setStep] = useState(steps);
     
-
+    const navigate = useNavigate()
     const dispatch = useDispatch()
 
     const buttonString = () => {
@@ -66,7 +67,20 @@ function Registration() {
         }
         if (steps === 1) {
             // linking categories to your company
-            
+            dispatch(storeStep(istep + 1))
+        }
+        if (steps === 2) {
+            if (company.phone_number === '') {
+                console.log('save here')
+            } else {
+                dispatch(storeStep(istep + 1))
+            }
+
+        }
+        if (steps === 3) {
+            dispatch(storeIsRegistering(false));
+            dispatch(storeLoggedIn(true))
+            navigate('/dashboard')
         }
     }
 

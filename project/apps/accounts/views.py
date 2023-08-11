@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView, RetrieveAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView, RetrieveAPIView, CreateAPIView
 from rest_framework.views import APIView
 from django.http import JsonResponse
 from django.conf import settings
@@ -9,10 +9,15 @@ from .serializers import (
     MainCategorySerializers, 
     SubCategorySerializers, 
     ServiceCategorySerializers,
-    ProfileSerializer
+    ProfileSerializer,
+    CompanyZipSerializer
 )
 
 # Create your views here.
+class CreateCompanyZipCodeAPIView(CreateAPIView):
+    serializer_class = CompanyZipSerializer
+
+
 class GetProfileAPIView(RetrieveAPIView):
     serializer_class = ProfileSerializer
     

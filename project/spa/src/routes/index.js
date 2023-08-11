@@ -1,16 +1,18 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, useRoutes } from "react-router-dom";
+
 import Login from "../pages/Authentication/Login";
 import Registration from "../pages/Authentication/Registration";
 import App from '../App';
 import VerifyEmail from "../pages/Authentication/Verify";
+import Dashboard from "../pages/Dashboard";
 
 const router = createBrowserRouter([
+    // {
+    //     path: "/",
+    //     element: <App />
+    // },
     {
         path: "/",
-        element: <App />
-    },
-    {
-        path: "/login",
         element: <Login />
     },
     {
@@ -20,6 +22,10 @@ const router = createBrowserRouter([
     {
         path: "/registration",
         element: <Registration />
+    },
+    {
+        path: "/dashboard",
+        element: <Dashboard />
     }
 ])
 

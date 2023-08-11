@@ -10,6 +10,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import './index.css';
 
 import reportWebVitals from './reportWebVitals';
+import { AuthProvider } from './pages/Authentication/AuthContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

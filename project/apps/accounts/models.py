@@ -4,7 +4,9 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 class ZipCode(models.Model):
-    code = models.BigIntegerField()
+    code = models.CharField(max_length=6)
+    state = models.CharField(max_length=255, null=True, blank=True)
+    city = models.CharField(max_length=255, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, auto_now=False)
     updated_at = models.DateTimeField(auto_now=True, auto_now_add=False)
 
@@ -43,12 +45,16 @@ class Company(models.Model):
     name = models.CharField(max_length=255)
     website = models.URLField()
     phone_number_for_lead = models.CharField(max_length=16, null=True, blank=True)
-    category = models.ForeignKey(MainCategory, on_delete=models.SET_NULL, null=True)
+    services = models.ManyToManyField(ServiceCategories, through='CompanyServices')
     created_at = models.DateTimeField(auto_now=False, auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=False, auto_now=True)
 
     def __str__(self) -> str:
         return self.name
+
+class CompanyServices(models.Model):
+    service = models.ForeignKey(ServiceCategories, on_delete=models.SET_NULL, null=True)
+    company = models.ForeignKey(Company, on_delete=models.SET_NULL, null=True)
 
 
 class Profile(models.Model):
