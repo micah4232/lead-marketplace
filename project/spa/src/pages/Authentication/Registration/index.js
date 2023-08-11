@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 import { RegisterAPI, GetMainCategories } from "./api";
 import { storeMainCategories } from "../reducers/categoriesReducer";
 import { useDispatch } from "react-redux";
-import { storeIsRegistering, storeLoggedIn, storeStep, storeUser } from "../reducers/authenticationSlice";
+import { storeIsRegistering, storeIsVerified, storeLoggedIn, storeStep, storeUser } from "../reducers/authenticationSlice";
 import { useNavigate } from "react-router-dom";
 
 function Registration() {
@@ -55,6 +55,7 @@ function Registration() {
                         }))
                         
                         dispatch(storeIsRegistering(true));
+                        dispatch(storeIsVerified(true));
                     }
                 }).catch(error => {
                     console.log('Have some error here!')
