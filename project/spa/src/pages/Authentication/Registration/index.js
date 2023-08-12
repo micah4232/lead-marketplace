@@ -86,6 +86,7 @@ function Registration() {
     }
 
     const onClickBack = () => {
+        console.log('na click ang back button')
         let istep = step;
         dispatch(storeStep(istep - 1))
     }

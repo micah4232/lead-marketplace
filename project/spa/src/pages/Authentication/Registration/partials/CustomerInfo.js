@@ -89,8 +89,7 @@ function CustomerInfo() {
     const onAddZipCode = () => {
         if (zipModel.code != '') {
             const tempZipCodes = zipCodes;
-            tempZipCodes.push(zipModel)
-            setZipCodes(tempZipCodes)
+            setZipCodes([...tempZipCodes, zipModel])
             setZipModel({code: '', city: '', state: ''})
         }
     }
@@ -106,7 +105,7 @@ function CustomerInfo() {
         CreateCompanyZipCodeList(data).then((response) => {
             if (response.status === 201) {
                 const temp = zipCodeList
-                _.debounce(dispatch(storeZipCodeList(temp.push(response.data))))
+                dispatch(storeZipCodeList({...response.data, zip_codes: zipCodes}))
                 // after dispatch clear all
                 setZipName('')
                 setZip('')

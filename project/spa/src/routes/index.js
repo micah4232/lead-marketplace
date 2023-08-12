@@ -13,20 +13,21 @@ const router = createBrowserRouter([
     // },
     {
         path: "/",
-        element: <Login />
+        element: <Login />,
     },
     {
-        path: "/activate/:uuid/:token/",
+        path: "activate/:uuid/:token/",
         element: <VerifyEmail />
     },
     {
-        path: "/registration",
+        path: "registration",
         element: <Registration />
     },
     {
-        path: "/dashboard",
+        path: "dashboard",
         element: <Dashboard />
     }
+    
 ])
 
 export default router

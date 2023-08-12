@@ -1,10 +1,21 @@
 import { Label, TextInput, Checkbox, Button } from "flowbite-react"
-import { useState } from "react"
-import { Link } from "react-router-dom"
+import { useEffect, useState } from "react"
+import { useSelector } from "react-redux"
+import { Link, useNavigate } from "react-router-dom"
 
 function Login() {
     const [email, setEmail] = useState()
     const [password, setPassword] = useState()
+    const isVerified = useSelector((state) => state.authentication.isVerified)
+    const isRegistering = useSelector((state) => state.authentication.isRegistering)
+
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        if (isVerified && !isRegistering) {
+            navigate("/dashboard");
+        }
+    }, []);
 
     return (
         <div className="mt-20" style={{width: 500}}>
