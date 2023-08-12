@@ -5,11 +5,14 @@ import { GetServiceBySub } from '../api';
 import { useDispatch } from 'react-redux';
 import { storeSelectedServices } from '../../reducers/categoriesReducer';
 import { storeCompany } from '../../reducers/authenticationSlice';
+import { TextInput, Select as SelectF, Label } from 'flowbite-react';
+import ServiceCard from './components/serviceCard';
 
 function YourSettings() {
     const selectedSub = useSelector((state) => state.category.selectedSub)
     const company = useSelector((state)=>state.authentication.company)
     const selectedServices = useSelector((state) => state.category.selectedServices)
+    const zipCodeList = useSelector((state) => state.authentication.zipCodeList)
     const [services, setServices] = useState([
         {value: '1', label: 'samok' }
     ]);
@@ -40,7 +43,14 @@ function YourSettings() {
             }
             <Select options={services} isMulti className='w-full mt-5' value={selectedServices} onChange={(newValue) => {
                 dispatch(storeSelectedServices(newValue))
+                // convert it to a proper object.
+
             }} />
+            <div className="grid grid-cols-4 gap-4 mt-5">
+                {
+                    selectedServices && selectedServices.map((obj, index) => <ServiceCard key={index} service={obj.label} zipList={zipCodeList} />)
+                }
+            </div>
             <h3 className="text-left font-bold text-xl mt-10">Lead Delivery</h3>
             <p>The Phone Number where you want to receive your leads.</p>
             <div>
