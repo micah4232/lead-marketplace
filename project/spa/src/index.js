@@ -10,14 +10,15 @@ import { PersistGate } from 'redux-persist/integration/react';
 import './index.css';
 
 import reportWebVitals from './reportWebVitals';
-import { AuthProvider } from './pages/Authentication/AuthContext';
+import AlertToaster from './components/AlertToaster';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <div className='flex justify-center bg-[#F8F8FB] min-h-screen'>
+        <div className='flex justify-center bg-[#F8F8FB] min-h-screen w-full'>
+          <AlertToaster />
           <RouterProvider router={router} />
         </div>
       </PersistGate>

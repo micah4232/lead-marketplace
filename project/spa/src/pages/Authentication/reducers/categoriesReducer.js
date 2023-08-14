@@ -8,7 +8,7 @@ export const categoriesSlice = createSlice({
         servicesCategories: [],
         selectedMain: null,
         selectedSub: null,
-        selectedServices: []
+        selectedServices: [],
     },
     reducers: {
         storeMainCategories: (state, action) => {
@@ -27,7 +27,18 @@ export const categoriesSlice = createSlice({
             state.selectedMain = action.payload;
         },
         storeSelectedServices: (state, action) => {
-            state.selectedServices = action.payload;
+            const selected_length = state.selectedServices.length
+            if (action.payload.length > selected_length) {
+                state.selectedServices = [...state.selectedServices, {...action.payload[action.payload.length - 1], price: '', zipcode_group: ''}]
+            } else {
+                state.selectedServices.splice(state.selectedServices.length - 1, 1)
+            }
+        },
+        onChangePrice: (state, action) => {
+            state.selectedServices[action.payload.index] = { ...state.selectedServices[action.payload.index], price : action.payload.value }
+        },
+        onChangeZipGroup: (state, action) => {
+            state.selectedServices[action.payload.index] = { ...state.selectedServices[action.payload.index], zipcode_group : action.payload.value }
         }
     }
 });
@@ -38,7 +49,9 @@ export const {
     storeServices, 
     storeSelectedSub, 
     storeSelectedMain,
-    storeSelectedServices
+    storeSelectedServices,
+    onChangePrice,
+    onChangeZipGroup
 } = categoriesSlice.actions;
 
 export default categoriesSlice.reducer;

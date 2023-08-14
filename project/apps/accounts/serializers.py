@@ -133,9 +133,14 @@ class CompanyZipSerializer(serializers.ModelSerializer):
         for zipcode in zipcodes:
             zipp = ZipCode.objects.get_or_create(**zipcode)
             CompanyZipModel.objects.create(zip_code=zipp[0], radius_zip_code=obj)
-        validated_data['zip_codes'] = zipcodes
-        return validated_data
-    
+        return obj
+
+    def to_representation(self, instance):
+        return_data = super().to_representation(instance)
+        print(instance)
+        return_data['id'] = instance.id
+        return return_data
+
     
 class CompanyServcesSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
