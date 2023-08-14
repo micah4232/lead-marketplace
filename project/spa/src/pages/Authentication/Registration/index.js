@@ -10,6 +10,7 @@ import { storeMainCategories } from "../reducers/categoriesReducer";
 import { useDispatch } from "react-redux";
 import { storeIsRegistering, storeIsVerified, storeLoggedIn, storeStep, storeUser } from "../reducers/authenticationSlice";
 import { useNavigate } from "react-router-dom";
+import { onAlertShow } from "../../../components/reducers/componentSlice";
 
 function Registration() {
     const user = useSelector((state) => state.authentication.user);
@@ -56,10 +57,14 @@ function Registration() {
                         }))
                         
                         dispatch(storeIsRegistering(true));
-                        dispatch(storeIsVerified(true));
+                        // dispatch(storeIsVerified(true));
                     }
                 }).catch(error => {
-                    console.log('Have some error here!')
+                    dispatch(onAlertShow({
+                        show:true,
+                        alert: 'error',
+                        message: error.response.data
+                    }))
                 });
             }
 
@@ -73,11 +78,17 @@ function Registration() {
         }
         if (steps === 2) {
             if (company.phone_number === '') {
-                console.log('save here')
+                dispatch(onAlertShow({
+                    show:true,
+                    alert: 'error',
+                    message: 'You have not entered your Phone number'
+                }))
             } else if (selectedServices.length === 0) {
-                console.log('empty services')
-            } else if (company.phone_number === '') {
-                console.log('error no phone number')
+                dispatch(onAlertShow({
+                    show: true,
+                    alert: 'error',
+                    message: 'You have no Services Selected, please select services Thank you'
+                }))
             } else {
                 // save to database.
                 dispatch(storeStep(istep + 1))

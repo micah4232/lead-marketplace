@@ -3,11 +3,18 @@ import { MdError, MdCheckCircle, MdInfo } from 'react-icons/md'
 import { useDispatch } from "react-redux"
 import { useSelector } from "react-redux"
 import { onAlertClose } from "./reducers/componentSlice"
+import { useEffect } from "react"
 
 function AlertToaster () {
 
     const alert = useSelector((state) => state.component.alert)
     const dispatch = useDispatch()
+
+    useEffect(() => {
+        if (alert.show === true) {
+            setTimeout(() => dispatch(onAlertClose()), 5000);
+        }
+    }, []);
     
     const alertChange = () => {
         let alertColor = 'cyan'
@@ -60,7 +67,7 @@ function AlertToaster () {
         <>
             {
                 (alert.show === true) ? <>
-                    <Toast className='absolute top-10 justify-self-end right-3 shadow-lg shadow-indigo-500/40'>
+                    <Toast className='fixed top-10 justify-self-end right-3 shadow-lg shadow-indigo-500/40'>
                         <div className={alertChange()}>              
                         {
                             imageShow()
