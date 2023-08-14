@@ -42,13 +42,13 @@ function YourSettings() {
                 (selectedSub === null) ? <p className="text-sm text-red-500">Please make sure to select Sub category</p> : null
             }
             <Select options={services} isMulti className='w-full mt-5' value={selectedServices} onChange={(newValue) => {
+                // adding algorithm
                 dispatch(storeSelectedServices(newValue))
                 // convert it to a proper object.
-
             }} />
             <div className="grid grid-cols-4 gap-4 mt-5">
                 {
-                    selectedServices && selectedServices.map((obj, index) => <ServiceCard key={index} service={obj.label} zipList={zipCodeList} />)
+                    selectedServices && selectedServices.map((obj, index) => <ServiceCard key={index} service={obj} zipList={zipCodeList} index={index} />)
                 }
             </div>
             <h3 className="text-left font-bold text-xl mt-10">Lead Delivery</h3>

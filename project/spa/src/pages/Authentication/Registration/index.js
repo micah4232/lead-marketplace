@@ -76,7 +76,10 @@ function Registration() {
                 console.log('save here')
             } else if (selectedServices.length === 0) {
                 console.log('empty services')
+            } else if (company.phone_number === '') {
+                console.log('error no phone number')
             } else {
+                // save to database.
                 dispatch(storeStep(istep + 1))
             }
 
