@@ -16,6 +16,7 @@ function Registration() {
     const steps = useSelector((state) => state.authentication.step);
     const isVerified = useSelector((state) => state.authentication.isVerified)
     const company = useSelector((state) => state.authentication.company)
+    const selectedServices = useSelector((state) => state.category.selectedServices)
     const [error,setError] = useState()
     const [step, setStep] = useState(steps);
     
@@ -73,6 +74,8 @@ function Registration() {
         if (steps === 2) {
             if (company.phone_number === '') {
                 console.log('save here')
+            } else if (selectedServices.length === 0) {
+                console.log('empty services')
             } else {
                 dispatch(storeStep(istep + 1))
             }
