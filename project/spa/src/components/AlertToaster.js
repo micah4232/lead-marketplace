@@ -12,7 +12,7 @@ function AlertToaster () {
 
     useEffect(() => {
         if (alert.show === true) {
-            setTimeout(() => dispatch(onAlertClose()), 5000);
+            setTimeout(() => dispatch(onAlertClose()), 3000);
         }
     }, []);
     

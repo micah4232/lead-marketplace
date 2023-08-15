@@ -5,7 +5,7 @@ import YourSettings from "./partials/YourSettings";
 import AccountInfo from "./partials/AccountInfo";
 import { useSelector } from "react-redux";
 
-import { RegisterAPI, GetMainCategories } from "./api";
+import { RegisterAPI, GetMainCategories, CreateBulkBid } from "./api";
 import { storeMainCategories } from "../reducers/categoriesReducer";
 import { useDispatch } from "react-redux";
 import { storeIsRegistering, storeIsVerified, storeLoggedIn, storeStep, storeUser } from "../reducers/authenticationSlice";
@@ -91,7 +91,17 @@ function Registration() {
                 }))
             } else {
                 // save to database.
-                dispatch(storeStep(istep + 1))
+                CreateBulkBid(selectedServices, company.id).then(response => {
+                    console.log(response.data)
+                    dispatch(storeStep(istep + 1))
+                }).catch(error => {
+                    dispatch(onAlertShow({
+                        show: true,
+                        alert: 'error',
+                        message: 'Bid did not save to database.'
+                    }))
+                })
+                
             }
 
         }
@@ -103,9 +113,7 @@ function Registration() {
     }
 
     const onClickBack = () => {
-        console.log('na click ang back button')
-        let istep = step;
-        dispatch(storeStep(istep - 1))
+        dispatch(storeStep(steps - 1))
     }
 
     return (
