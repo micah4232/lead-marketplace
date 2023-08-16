@@ -5,7 +5,7 @@ import YourSettings from "./partials/YourSettings";
 import AccountInfo from "./partials/AccountInfo";
 import { useSelector } from "react-redux";
 
-import { RegisterAPI, GetMainCategories, CreateBulkBid } from "./api";
+import { RegisterAPI, GetMainCategories, CreateBulkBid, UpdateCompany } from "./api";
 import { storeMainCategories } from "../reducers/categoriesReducer";
 import { useDispatch } from "react-redux";
 import { storeIsRegistering, storeIsVerified, storeLoggedIn, storeStep, storeUser } from "../reducers/authenticationSlice";
@@ -18,8 +18,7 @@ function Registration() {
     const isVerified = useSelector((state) => state.authentication.isVerified)
     const company = useSelector((state) => state.authentication.company)
     const selectedServices = useSelector((state) => state.category.selectedServices)
-    const [error,setError] = useState()
-    const [step, setStep] = useState(steps);
+    const [bulkSaved, setBulkSaved] = useState(false)
     
     const navigate = useNavigate()
     const dispatch = useDispatch()
@@ -92,8 +91,7 @@ function Registration() {
             } else {
                 // save to database.
                 CreateBulkBid(selectedServices, company.id).then(response => {
-                    console.log(response.data)
-                    dispatch(storeStep(istep + 1))
+                    setBulkSaved(true)
                 }).catch(error => {
                     dispatch(onAlertShow({
                         show: true,
@@ -101,7 +99,17 @@ function Registration() {
                         message: 'Bid did not save to database.'
                     }))
                 })
-                
+                // save phone and enable_phone number
+                UpdateCompany(company).then(response => {
+                    console.log(response.data)
+                }).catch(error => {
+                    dispatch(onAlertShow({
+                        show: true,
+                        alert: 'error',
+                        message: 'Updating company failed!'
+                    }))
+                })
+                dispatch(storeStep(istep + 1))
             }
 
         }
@@ -175,11 +183,6 @@ function Registration() {
                         (steps === 3) ? <AccountInfo /> : ''
                     }
                     <div className="text-right pt-10">
-                        {
-                            (steps > 0) ? <button type="button" class="text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800 mr-5" onClick={onClickBack}>
-                            Back
-                        </button> : null
-                        }
                         <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={onClickButton}>
                             {buttonString()}
                         </button>

@@ -46,6 +46,7 @@ class Company(models.Model):
     website = models.URLField()
     phone_number_for_lead = models.CharField(max_length=16, null=True, blank=True)
     services = models.ManyToManyField(ServiceCategories, through='CompanyServices')
+    enable_calls_to_number = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now=False, auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=False, auto_now=True)
 

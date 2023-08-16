@@ -4,7 +4,7 @@ import Login from "../pages/Authentication/Login";
 import Registration from "../pages/Authentication/Registration";
 import App from '../App';
 import VerifyEmail from "../pages/Authentication/Verify";
-import Dashboard from "../pages/Dashboard";
+import Application from "../pages/Application";
 
 const router = createBrowserRouter([
     // {
@@ -24,8 +24,8 @@ const router = createBrowserRouter([
         element: <Registration />
     },
     {
-        path: "dashboard",
-        element: <Dashboard />
+        path: "app",
+        element: <Application />
     }
     
 ])

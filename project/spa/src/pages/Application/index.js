@@ -18,8 +18,15 @@ function Dashboard() {
     return (
         <>
             <div className="w-full">
-                <TopNavigation />
-                <SideNavBar />
+                <TopNavigation className="bg-purple-500" />
+                <div className="grid grid-cols-6 gap-4 h-screen">
+                    <div className="">
+                        <SideNavBar />
+                    </div>
+                    <div className="col-span-5 bg-white">
+                        
+                    </div>
+                </div>
             </div>
         </>
     )

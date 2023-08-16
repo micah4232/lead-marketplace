@@ -3,7 +3,7 @@ import { HiArrowSmRight, HiChartPie, HiInbox, HiShoppingBag, HiTable, HiUser, Hi
 
 function SideNavBar () {
     return (
-        <Sidebar>
+        <Sidebar className="bg-red-500">
             <Sidebar.Items>
                 <Sidebar.ItemGroup>
                 <Sidebar.Item
@@ -14,29 +14,12 @@ function SideNavBar () {
                     Dashboard
                     </p>
                 </Sidebar.Item>
-                <Sidebar.Collapse
-                    icon={HiShoppingBag}
-                    label="E-commerce"
-                >
-                    <Sidebar.Item href="#">
-                    Products
-                    </Sidebar.Item>
-                    <Sidebar.Item href="#">
-                    Sales
-                    </Sidebar.Item>
-                    <Sidebar.Item href="#">
-                    Refunds
-                    </Sidebar.Item>
-                    <Sidebar.Item href="#">
-                    Shipping
-                    </Sidebar.Item>
-                </Sidebar.Collapse>
                 <Sidebar.Item
                     href="#"
                     icon={HiInbox}
                 >
                     <p>
-                    Inbox
+                    Clients Account
                     </p>
                 </Sidebar.Item>
                 <Sidebar.Item
@@ -44,7 +27,7 @@ function SideNavBar () {
                     icon={HiUser}
                 >
                     <p>
-                    Users
+                    Leads
                     </p>
                 </Sidebar.Item>
                 <Sidebar.Item
@@ -52,23 +35,7 @@ function SideNavBar () {
                     icon={HiShoppingBag}
                 >
                     <p>
-                    Products
-                    </p>
-                </Sidebar.Item>
-                <Sidebar.Item
-                    href="#"
-                    icon={HiArrowSmRight}
-                >
-                    <p>
-                    Sign In
-                    </p>
-                </Sidebar.Item>
-                <Sidebar.Item
-                    href="#"
-                    icon={HiTable}
-                >
-                    <p>
-                    Sign Up
+                    Campaigns
                     </p>
                 </Sidebar.Item>
                 </Sidebar.ItemGroup>

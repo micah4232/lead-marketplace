@@ -4,13 +4,14 @@ from rest_framework.views import APIView
 from django.http import JsonResponse
 from django.conf import settings
 import requests as req
-from .models import MainCategory, SubCategory, ServiceCategories, Profile
+from .models import MainCategory, SubCategory, ServiceCategories, Profile, Company
 from .serializers import (
     MainCategorySerializers, 
     SubCategorySerializers, 
     ServiceCategorySerializers,
     ProfileSerializer,
-    CompanyZipSerializer
+    CompanyZipSerializer,
+    CompanySerializer
 )
 
 # Create your views here.
@@ -82,3 +83,8 @@ class GetZipCodeAPIView(APIView):
         get_zip = req.get(f'{zip_code_url}',headers=headers, params=params)
         
         return JsonResponse(get_zip.json())
+
+
+class RetrieveUpdateDeleteCompanyAPIVIew(RetrieveUpdateDestroyAPIView):
+    queryset = Company.objects.all()
+    serializer_class = CompanySerializer

@@ -29,7 +29,7 @@ export const categoriesSlice = createSlice({
         storeSelectedServices: (state, action) => {
             const selected_length = state.selectedServices.length
             if (action.payload.length > selected_length) {
-                state.selectedServices = [...state.selectedServices, {...action.payload[action.payload.length - 1], price: '', zipcode_group: ''}]
+                state.selectedServices = [...state.selectedServices, {...action.payload[action.payload.length - 1], price: '', zip_group: ''}]
             } else {
                 state.selectedServices.splice(state.selectedServices.length - 1, 1)
             }
@@ -38,7 +38,7 @@ export const categoriesSlice = createSlice({
             state.selectedServices[action.payload.index] = { ...state.selectedServices[action.payload.index], price : action.payload.value }
         },
         onChangeZipGroup: (state, action) => {
-            state.selectedServices[action.payload.index] = { ...state.selectedServices[action.payload.index], zipcode_group : action.payload.value }
+            state.selectedServices[action.payload.index] = { ...state.selectedServices[action.payload.index], zip_group : action.payload.value }
         }
     }
 });
