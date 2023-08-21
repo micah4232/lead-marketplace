@@ -5,11 +5,12 @@ import YourSettings from "./partials/YourSettings";
 import AccountInfo from "./partials/AccountInfo";
 import { useSelector } from "react-redux";
 
-import { RegisterAPI, GetMainCategories } from "./api";
+import { RegisterAPI, GetMainCategories, CreateBulkBid, UpdateCompany } from "./api";
 import { storeMainCategories } from "../reducers/categoriesReducer";
 import { useDispatch } from "react-redux";
 import { storeIsRegistering, storeIsVerified, storeLoggedIn, storeStep, storeUser } from "../reducers/authenticationSlice";
 import { useNavigate } from "react-router-dom";
+import { onAlertShow } from "../../../components/reducers/componentSlice";
 
 function Registration() {
     const user = useSelector((state) => state.authentication.user);
@@ -17,8 +18,7 @@ function Registration() {
     const isVerified = useSelector((state) => state.authentication.isVerified)
     const company = useSelector((state) => state.authentication.company)
     const selectedServices = useSelector((state) => state.category.selectedServices)
-    const [error,setError] = useState()
-    const [step, setStep] = useState(steps);
+    const [bulkSaved, setBulkSaved] = useState(false)
     
     const navigate = useNavigate()
     const dispatch = useDispatch()
@@ -56,10 +56,14 @@ function Registration() {
                         }))
                         
                         dispatch(storeIsRegistering(true));
-                        dispatch(storeIsVerified(true));
+                        // dispatch(storeIsVerified(true));
                     }
                 }).catch(error => {
-                    console.log('Have some error here!')
+                    dispatch(onAlertShow({
+                        show:true,
+                        alert: 'error',
+                        message: error.response.data
+                    }))
                 });
             }
 
@@ -73,13 +77,38 @@ function Registration() {
         }
         if (steps === 2) {
             if (company.phone_number === '') {
-                console.log('save here')
+                dispatch(onAlertShow({
+                    show:true,
+                    alert: 'error',
+                    message: 'You have not entered your Phone number'
+                }))
             } else if (selectedServices.length === 0) {
-                console.log('empty services')
-            } else if (company.phone_number === '') {
-                console.log('error no phone number')
+                dispatch(onAlertShow({
+                    show: true,
+                    alert: 'error',
+                    message: 'You have no Services Selected, please select services Thank you'
+                }))
             } else {
                 // save to database.
+                CreateBulkBid(selectedServices, company.id).then(response => {
+                    setBulkSaved(true)
+                }).catch(error => {
+                    dispatch(onAlertShow({
+                        show: true,
+                        alert: 'error',
+                        message: 'Bid did not save to database.'
+                    }))
+                })
+                // save phone and enable_phone number
+                UpdateCompany(company).then(response => {
+                    console.log(response.data)
+                }).catch(error => {
+                    dispatch(onAlertShow({
+                        show: true,
+                        alert: 'error',
+                        message: 'Updating company failed!'
+                    }))
+                })
                 dispatch(storeStep(istep + 1))
             }
 
@@ -87,14 +116,12 @@ function Registration() {
         if (steps === 3) {
             dispatch(storeIsRegistering(false));
             dispatch(storeLoggedIn(true))
-            navigate('/dashboard')
+            navigate('/app')
         }
     }
 
     const onClickBack = () => {
-        console.log('na click ang back button')
-        let istep = step;
-        dispatch(storeStep(istep - 1))
+        dispatch(storeStep(steps - 1))
     }
 
     return (
@@ -156,11 +183,6 @@ function Registration() {
                         (steps === 3) ? <AccountInfo /> : ''
                     }
                     <div className="text-right pt-10">
-                        {
-                            (steps > 0) ? <button type="button" class="text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800 mr-5" onClick={onClickBack}>
-                            Back
-                        </button> : null
-                        }
                         <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={onClickButton}>
                             {buttonString()}
                         </button>

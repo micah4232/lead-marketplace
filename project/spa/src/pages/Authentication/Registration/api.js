@@ -27,3 +27,18 @@ export const GetCompanyIdByUser = (id) => {
 export const CreateCompanyZipCodeList = (payload) => {
     return axios.post('company/zipcode-list/', payload)
 }
+
+export const CreateBulkBid = (payload, company) => {
+    let temp_data = payload;
+    let data = []
+
+    temp_data.map(obj => {
+        data = [...data, {...obj, company: company, service: obj.value, price: parseFloat(parseInt(obj.price)).toFixed(2), zip_group: parseInt(obj.zipcode_group)}]
+    });
+
+    return axios.post('bid/bulk/create', { "bids": data })
+}
+
+export const UpdateCompany = (payload) => {
+    return axios.patch(`company/${payload.id}/`,{...payload, phone_number_for_lead: payload.phone_number})
+}

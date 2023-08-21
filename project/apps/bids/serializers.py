@@ -13,11 +13,15 @@ class BulkSavingSerializers(serializers.Serializer):
 
     def create(self, validated_data):
         bulk_to_create = []
-        for bid_obj in validated_data:
+        print(validated_data['bids'])
+        for bid_obj in validated_data['bids']:
             bulk_to_create.append(Bid(**bid_obj))
         # to create here
-        Bid.objects.bulk_create(bulk_to_create)
-        return validated_data
+        bid_obj = Bid.objects.bulk_create(bulk_to_create)
+
+        return_obj = Bid.objects.filter(company=validated_data['bids'][0]['company'].id)
+
+        return {'bids' : return_obj}
 
 
 class ListBidSerializers(serializers.ModelSerializer):

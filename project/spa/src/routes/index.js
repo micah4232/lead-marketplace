@@ -4,13 +4,13 @@ import Login from "../pages/Authentication/Login";
 import Registration from "../pages/Authentication/Registration";
 import App from '../App';
 import VerifyEmail from "../pages/Authentication/Verify";
-import Dashboard from "../pages/Dashboard";
+import Application from "../pages/Application";
+import Dashboard from "../pages/Application/pages/Dashboard";
+import ClientsAccount from "../pages/Application/pages/ClientsAccount";
+import Leads from "../pages/Application/pages/Leads";
+import Campaigns from "../pages/Application/pages/Campaigns";
 
 const router = createBrowserRouter([
-    // {
-    //     path: "/",
-    //     element: <App />
-    // },
     {
         path: "/",
         element: <Login />,
@@ -24,8 +24,26 @@ const router = createBrowserRouter([
         element: <Registration />
     },
     {
-        path: "dashboard",
-        element: <Dashboard />
+        path: "app/",
+        element: <Application />,
+        children: [
+            {
+                path: "",
+                element: <Dashboard />
+            },
+            {
+                path: "clients-account",
+                element: <ClientsAccount/>
+            },
+            {
+                path: "leads",
+                element: <Leads />
+            },
+            {
+                path: "campaigns",
+                element: <Campaigns />
+            }
+        ]
     }
     
 ])
