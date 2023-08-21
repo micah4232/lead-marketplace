@@ -116,7 +116,7 @@ function Registration() {
         if (steps === 3) {
             dispatch(storeIsRegistering(false));
             dispatch(storeLoggedIn(true))
-            navigate('/dashboard')
+            navigate('/app')
         }
     }
 

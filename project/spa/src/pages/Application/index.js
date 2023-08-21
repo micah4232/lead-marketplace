@@ -1,10 +1,10 @@
 import { useEffect } from "react"
 import { useSelector } from "react-redux";
-import { redirect, useNavigate } from "react-router-dom";
+import { Outlet, redirect, useNavigate } from "react-router-dom";
 import TopNavigation from "./components/TopNavigation";
 import SideNavBar from "./components/SideNavBar";
 
-function Dashboard() {
+function Application() {
     const isRegistering = useSelector((state) => state.authentication.isRegistering)
     const isLoggedIn = useSelector((state) => state.authentication.isLoggedIn)
     const navigate = useNavigate()
@@ -18,13 +18,14 @@ function Dashboard() {
     return (
         <>
             <div className="w-full">
-                <TopNavigation className="bg-purple-500" />
+                <TopNavigation />
                 <div className="grid grid-cols-6 gap-4 h-screen">
-                    <div className="">
+                    <div>
                         <SideNavBar />
                     </div>
                     <div className="col-span-5 bg-white">
-                        
+                        {/* displays the child */}
+                        <Outlet />
                     </div>
                 </div>
             </div>
@@ -32,4 +33,4 @@ function Dashboard() {
     )
 }
 
-export default Dashboard
+export default Application
