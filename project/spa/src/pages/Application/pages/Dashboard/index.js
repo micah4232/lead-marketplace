@@ -1,4 +1,5 @@
 import LeadsDataTable from "../../../../components/LeadsDataTable"
+import CampaignCard from "./components/CampaignCard"
 import StatementCard from "./components/StatementCard"
 import TotalCard from "./components/TotalCard"
 
@@ -92,6 +93,14 @@ function Dashboard() {
                 </div>
                 <div className="mt-10 border">
                     <h1 className="text-xl font-bold text-white bg-blue-500 p-4">Campaign Manager</h1>
+                    <div className="p-3">
+                        <p className="text-xl font-bold text-yellow-400">Paused Campaigns</p>
+                        <CampaignCard 
+                        name="Home Appliance Repair" 
+                        category="Market Place - Electrician - LA" 
+                        leads="12"
+                        cpl="55" />
+                    </div>
                 </div>
             </div>
         </>
