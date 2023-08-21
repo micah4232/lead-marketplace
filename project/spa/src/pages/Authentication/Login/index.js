@@ -13,7 +13,7 @@ function Login() {
 
     useEffect(() => {
         if (isVerified && !isRegistering) {
-            navigate("/dashboard");
+            navigate("/app");
         }
     }, []);
 
