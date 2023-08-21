@@ -25,7 +25,9 @@ function Application() {
                     </div>
                     <div className="col-span-5 bg-white">
                         {/* displays the child */}
-                        <Outlet />
+                        <div className="m-5">
+                            <Outlet />
+                        </div>
                     </div>
                 </div>
             </div>

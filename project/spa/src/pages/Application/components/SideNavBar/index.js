@@ -1,5 +1,6 @@
 import { Sidebar } from "flowbite-react"
 import { HiArrowSmRight, HiChartPie, HiInbox, HiShoppingBag, HiTable, HiUser, HiViewBoards } from 'react-icons/hi';
+import { NavLink } from "react-router-dom";
 
 function SideNavBar () {
     return (
@@ -7,36 +8,26 @@ function SideNavBar () {
             <Sidebar.Items>
                 <Sidebar.ItemGroup>
                 <Sidebar.Item
-                    href="#"
                     icon={HiChartPie}
                 >
-                    <p>
-                    Dashboard
-                    </p>
+                    <NavLink to="">Dashboard</NavLink>
                 </Sidebar.Item>
                 <Sidebar.Item
-                    href="#"
                     icon={HiInbox}
                 >
-                    <p>
-                    Clients Account
-                    </p>
+                    <NavLink to="clients-account">Clients Account</NavLink>
                 </Sidebar.Item>
                 <Sidebar.Item
-                    href="#"
                     icon={HiUser}
                 >
-                    <p>
-                    Leads
-                    </p>
+                    <NavLink to="leads">Leads</NavLink>
                 </Sidebar.Item>
                 <Sidebar.Item
-                    href="#"
                     icon={HiShoppingBag}
                 >
-                    <p>
+                    <NavLink to="campaigns">
                     Campaigns
-                    </p>
+                    </NavLink>
                 </Sidebar.Item>
                 </Sidebar.ItemGroup>
             </Sidebar.Items>
