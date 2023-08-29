@@ -1,34 +1,56 @@
 import { Sidebar } from "flowbite-react"
-import { HiArrowSmRight, HiChartPie, HiInbox, HiShoppingBag, HiTable, HiUser, HiViewBoards } from 'react-icons/hi';
-import { NavLink } from "react-router-dom";
+import { MdStore, MdReduceCapacity, MdLeaderboard, MdCampaign, MdOutlineAccountCircle, MdLogout } from 'react-icons/md'
+import { useLocation, NavLink } from "react-router-dom";
+
+import { sideBarTheme } from "./theme";
 
 function SideNavBar () {
+    const location = useLocation()
     return (
-        <Sidebar className="bg-red-500">
+        <Sidebar theme={sideBarTheme}>
             <Sidebar.Items>
                 <Sidebar.ItemGroup>
                 <Sidebar.Item
-                    icon={HiChartPie}
+                    // href="/app"
+                    icon={MdStore}
+                    className={location.pathname === '/app' ? "bg-white drop-shadow-md" : ""}
                 >
                     <NavLink to="">Dashboard</NavLink>
                 </Sidebar.Item>
                 <Sidebar.Item
-                    icon={HiInbox}
+                    icon={MdReduceCapacity}
+                    // href="/app/clients-account"
+                    className={location.pathname === '/app/clients-account' ? "bg-white drop-shadow-md" : ""}
                 >
+                    {/* Clients Account */}
                     <NavLink to="clients-account">Clients Account</NavLink>
                 </Sidebar.Item>
                 <Sidebar.Item
-                    icon={HiUser}
+                    icon={MdLeaderboard}
+                    // href="/app/leads"
+                    className={location.pathname === '/app/leads' ? "bg-white drop-shadow-md" : ""}
                 >
                     <NavLink to="leads">Leads</NavLink>
                 </Sidebar.Item>
                 <Sidebar.Item
-                    icon={HiShoppingBag}
+                    icon={MdCampaign}
+                    // href="/app/campaigns"
+                    className={location.pathname === '/app/campaigns' ? "bg-white drop-shadow-md" : ""}
                 >
-                    <NavLink to="campaigns">
-                    Campaigns
-                    </NavLink>
+                    <NavLink to="campaigns">Campaigns</NavLink>
                 </Sidebar.Item>
+                </Sidebar.ItemGroup>
+                <Sidebar.ItemGroup>
+                    <Sidebar.Item
+                    icon={MdOutlineAccountCircle}
+                    >
+                        Profile
+                    </Sidebar.Item>
+                    <Sidebar.Item
+                    icon={MdLogout}
+                    >
+                        Logout
+                    </Sidebar.Item>
                 </Sidebar.ItemGroup>
             </Sidebar.Items>
         </Sidebar>

@@ -23,7 +23,7 @@ function Application() {
                     <div>
                         <SideNavBar />
                     </div>
-                    <div className="col-span-5 bg-white">
+                    <div className="col-span-5 bg-[#F8F9FE]">
                         {/* displays the child */}
                         <div className="m-5">
                             <Outlet />
