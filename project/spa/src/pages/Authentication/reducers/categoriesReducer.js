@@ -31,7 +31,7 @@ export const categoriesSlice = createSlice({
             if (action.payload.length > selected_length) {
                 state.selectedServices = [...state.selectedServices, {...action.payload[action.payload.length - 1], price: '', zip_group: ''}]
             } else {
-                state.selectedServices.splice(state.selectedServices.length - 1, 1)
+                state.selectedServices = action.payload
             }
         },
         onChangePrice: (state, action) => {

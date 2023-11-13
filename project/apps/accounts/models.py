@@ -61,6 +61,7 @@ class CompanyServices(models.Model):
 class Profile(models.Model):
     company = models.OneToOneField(Company, on_delete=models.SET_NULL, null=True)
     user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True)
+    customer_id = models.CharField(max_length=255, null=True, blank=True)
 
 class RadiusZipCode(models.Model):
     name = models.CharField(max_length=255)

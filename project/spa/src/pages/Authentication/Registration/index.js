@@ -59,11 +59,20 @@ function Registration() {
                         // dispatch(storeIsVerified(true));
                     }
                 }).catch(error => {
-                    dispatch(onAlertShow({
-                        show:true,
-                        alert: 'error',
-                        message: error.response.data
-                    }))
+                    if (error.response.data.website) {
+                        dispatch(onAlertShow({
+                            show:true,
+                            alert: 'error',
+                            message: error.response.data.website[0]
+                        }))
+                    } else {
+                        dispatch(onAlertShow({
+                            show:true,
+                            alert: 'error',
+                            message: error.response.data
+                        }))
+                    }
+                    
                 });
             }
 

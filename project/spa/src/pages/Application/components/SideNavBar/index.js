@@ -44,7 +44,7 @@ function SideNavBar () {
                     <Sidebar.Item
                     icon={MdOutlineAccountCircle}
                     >
-                        Profile
+                        <NavLink to="profile" >Profile</NavLink>
                     </Sidebar.Item>
                     <Sidebar.Item
                     icon={MdLogout}

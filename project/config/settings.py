@@ -47,9 +47,11 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'djoser',
     'corsheaders',
+    'djstripe',
 
     'apps.accounts',
     'apps.bids',
+    'apps.payments',
 ]
 
 MIDDLEWARE = [
@@ -139,6 +141,11 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'spa', 'build', 'static')]
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    )
+}
 
 EMAIL_HOST = env('EMAIL_HOST')
 EMAIL_HOST_USER = env('EMAIL_HOST_USER')
@@ -193,3 +200,11 @@ DJOSER = {
         'activation' : 'apps.accounts.email.ActivateEmail'
     }
 }
+
+# djstripe
+STRIPE_LIVE_SECRET_KEY = env("STRIPE_LIVE_SECRET_KEY")
+STRIPE_TEST_SECRET_KEY = env("STRIPE_TEST_SECRET_KEY")
+STRIPE_LIVE_MODE = env("STRIPE_LIVE_MODE")  # Change to True in production
+DJSTRIPE_WEBHOOK_SECRET = env('DJSTRIPE_WEBHOOK_SECRET')  # Get it from the section in the Stripe dashboard where you added the webhook endpoint
+DJSTRIPE_USE_NATIVE_JSONFIELD = True  # We recommend setting to True for new installations
+DJSTRIPE_FOREIGN_KEY_TO_FIELD = "id"
