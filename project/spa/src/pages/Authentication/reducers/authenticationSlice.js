@@ -13,7 +13,7 @@ export const authenticationSlice = createSlice({
             'name' : '',
             'website' : '',
             'phone_number' : '',
-            'enable_calls_to_phone' : false
+            'enable_calls_to_number' : false
         },
         zipCodeList: [],
         isRegistering: false,

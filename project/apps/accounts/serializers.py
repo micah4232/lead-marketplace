@@ -1,11 +1,13 @@
 from djoser.serializers import UserCreateSerializer
 from django.contrib.auth import get_user_model
+from django.conf import settings as django_settings
 from rest_framework import serializers
 from django.db import IntegrityError, transaction
 from djoser.conf import settings
 from rest_framework.settings import api_settings
 from django.contrib.auth.password_validation import validate_password
 from django.core import exceptions as django_exceptions
+from djstripe.models import Customer
 
 from .models import (
     Company, 
@@ -51,7 +53,7 @@ class RegistrationSerializer(UserCreateSerializer):
             "first_name",
             "last_name",
             "confirm",
-            "company"
+            "company",
         )
 
     def validate(self, attrs):
@@ -90,9 +92,10 @@ class RegistrationSerializer(UserCreateSerializer):
         return user
 
     def perform_create(self, validated_data):
-        print(validated_data)
         with transaction.atomic():
             user = User.objects.create_user(**validated_data)
+            # create a customer with payment intent
+            customer = Customer.get_or_create(subscriber=user, livemode=False)
             if settings.SEND_ACTIVATION_EMAIL:
                 user.is_active = False
                 user.save(update_fields=["is_active"])

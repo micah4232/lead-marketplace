@@ -42,7 +42,6 @@ function YourSettings() {
                 (selectedSub === null) ? <p className="text-sm text-red-500">Please make sure to select Sub category</p> : null
             }
             <Select options={services} isMulti className='w-full mt-5' value={selectedServices} onChange={(newValue) => {
-                // adding algorithm
                 dispatch(storeSelectedServices(newValue))
                 // convert it to a proper object.
             }} />

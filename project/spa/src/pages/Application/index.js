@@ -10,11 +10,13 @@ function Application() {
     const navigate = useNavigate()
 
     useEffect(() => {
-        if (isLoggedIn === true && isRegistering === false) {
-            // console.log('samoka')
+        console.log('samoka')
+        if (isLoggedIn === false) {
+            console.log('grabe!')
             navigate('/')
         }
-    }, []);
+    },[]);
+
     return (
         <>
             <div className="w-full">
