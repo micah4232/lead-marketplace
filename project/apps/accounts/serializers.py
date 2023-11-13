@@ -95,7 +95,8 @@ class RegistrationSerializer(UserCreateSerializer):
         with transaction.atomic():
             user = User.objects.create_user(**validated_data)
             # create a customer with payment intent
-            customer = Customer.get_or_create(subscriber=user, livemode=False)
+            customer = Customer.create(subscriber=user)
+            customer.save(name=f"{user.first_name} {user.last_name}")
             if settings.SEND_ACTIVATION_EMAIL:
                 user.is_active = False
                 user.save(update_fields=["is_active"])
