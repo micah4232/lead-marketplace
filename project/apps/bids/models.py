@@ -1,5 +1,6 @@
 from django.db import models
 from apps.accounts.models import Company, RadiusZipCode, ServiceCategories
+from djstripe.models import Price
 # Create your models here.
 
 class Bid (models.Model):

@@ -42,3 +42,11 @@ export const CreateBulkBid = (payload, company) => {
 export const UpdateCompany = (payload) => {
     return axios.patch(`company/${payload.id}/`,{...payload, phone_number_for_lead: payload.phone_number})
 }
+
+export const SaveCard = (token) => {
+    return axios.get(`payment/save-card/`, {
+        headers: {
+            'Authorization' : `Token ${token}`
+        }
+    })
+}

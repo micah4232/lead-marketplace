@@ -141,11 +141,6 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'spa', 'build', 'static')]
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-REST_FRAMEWORK = {
-    'DEFAULT_RENDERER_CLASSES': (
-        'rest_framework.renderers.JSONRenderer',
-    )
-}
 
 EMAIL_HOST = env('EMAIL_HOST')
 EMAIL_HOST_USER = env('EMAIL_HOST_USER')
@@ -154,11 +149,11 @@ EMAIL_PORT = env('EMAIL_PORT')
 
 ZIP_CODE_API_KEY = env("ZIP_CODE_API_KEY")
 
-# REST_FRAMEWORK = {
-#     'DEFAULT_AUTHENTICATION_CLASSES' : {
-#         'rest_framework.authentication.TokenAuthentication',
-#     },
-# }
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+}
 
 FRONTEND_URL = 'http://localhost:3000'
 
