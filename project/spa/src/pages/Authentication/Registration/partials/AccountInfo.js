@@ -11,13 +11,9 @@ const stripePromise = loadStripe('pk_test_51LkibiL2np5xQYI5huhZzd47cDwtjKo9hMsbN
 
 function AccountInfo() {
     const [options,setOptions] = useState(null);
-    // const options = {
-    //     clientSecret: 'sk_test_51LkibiL2np5xQYI5vvCAHfkKHQWMfsYL6nEd7xOoCDWg6dqMLNspIp6R9ksu0hX3YzOo1E3wKlfEvkDCofktWFfc00Q5NBPxNX'
-    // }
 
     useEffect(() => {
         SaveCard('c44e71fa4c97f14d612904e7770c4b42aede57d5').then(response => {
-            console.log(response.data)
             setOptions({clientSecret: response.data})
         });
     }, [])
@@ -36,7 +32,7 @@ function AccountInfo() {
                 {
                     stripePromise && options && (
                         <Elements options={options} stripe={stripePromise}>
-                            <CardInformation  />
+                            <CardInformation clientSecret={options.clientSecret} />
                         </Elements>
                     )
                 }
