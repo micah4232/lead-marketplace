@@ -7,6 +7,8 @@ import { storeSelectedServices } from '../../reducers/categoriesReducer';
 import { storeCompany } from '../../reducers/authenticationSlice';
 import { TextInput, Select as SelectF, Label } from 'flowbite-react';
 import ServiceCard from './components/serviceCard';
+import PhoneInput from 'react-phone-input-2'
+import 'react-phone-input-2/lib/style.css'
 
 function YourSettings() {
     const selectedSub = useSelector((state) => state.category.selectedSub)
@@ -53,7 +55,12 @@ function YourSettings() {
             <h3 className="text-left font-bold text-xl mt-10">Lead Delivery</h3>
             <p>The Phone Number where you want to receive your leads.</p>
             <div>
-                <input type="text" id="phone_number" value={company.phone_number} onChange={(event) => dispatch(storeCompany({...company, phone_number: event.target.value}))} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Phone Number" required />
+                <PhoneInput
+                country={'us'}
+                value={company.phone_number}
+                onChange={(phone) => dispatch(storeCompany({...company, phone_number: phone}))}
+                />
+                {/* <input type="text" id="phone_number" value={company.phone_number} onChange={(event) => dispatch(storeCompany({...company, phone_number: event.target.value}))} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Phone Number" required /> */}
                 <p className="text-sm">Note: You can edit this, as well as set notifications for when a lead has been delivered, in your account.</p>
             </div>
             <div class="flex items-center mb-4 mt-5">

@@ -13,9 +13,10 @@ class BulkSavingSerializers(serializers.Serializer):
 
     def create(self, validated_data):
         bulk_to_create = []
-        print(validated_data['bids'])
         for bid_obj in validated_data['bids']:
             bulk_to_create.append(Bid(**bid_obj))
+            # pricing here
+            
         # to create here
         bid_obj = Bid.objects.bulk_create(bulk_to_create)
 
