@@ -4,8 +4,9 @@ import { useSelector } from "react-redux"
 import { Link, useNavigate } from "react-router-dom"
 import { LoginAPI } from "./api"
 import { useDispatch } from "react-redux"
-import { storeToken } from "../reducers/authenticationSlice"
+import { resetAuth, storeLoggedIn, storeReset, storeToken } from "../reducers/authenticationSlice"
 import { onAlertShow } from "../../../components/reducers/componentSlice"
+import { resetCategories } from "../reducers/categoriesReducer"
 
 function Login() {
     const [email, setEmail] = useState()
@@ -13,6 +14,7 @@ function Login() {
     const isVerified = useSelector((state) => state.authentication.isVerified)
     const isRegistering = useSelector((state) => state.authentication.isRegistering)
     const isLoggedIn = useSelector((state) => state.authentication.isLoggedIn)
+    const status = useSelector((state) => state.authentication.status)
 
     const navigate = useNavigate()
     const dispatch = useDispatch()
@@ -24,11 +26,16 @@ function Login() {
         if (isRegistering) {
             navigate("/registration")
         }
+        if (status) {
+            dispatch(resetAuth())
+            dispatch(resetCategories())
+            dispatch(storeReset(null))
+        }
     }, []);
 
     return (
         <div className="mt-20" style={{width: 500}}>
-            <div class="flex items-center justify-center w-full text-sm font-medium text-center text-gray-500 bg-[#D4DAF9] p-10">
+            <div className="flex items-center justify-center w-full text-sm font-medium text-center text-gray-500 bg-[#D4DAF9] p-10">
                 <h1 className="text-xl font-bold">Login</h1>
             </div>
             <div className="bg-white p-5 border-1">
@@ -69,6 +76,7 @@ function Login() {
                     <Button type="button" onClick={() => {
                         LoginAPI(email, password).then(response => {
                             dispatch(storeToken(response.data.auth_token))
+                            dispatch(storeLoggedIn(true))
                         }).catch(error => {
                             dispatch(onAlertShow({
                                 show : true,

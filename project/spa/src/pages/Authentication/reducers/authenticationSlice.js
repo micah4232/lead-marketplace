@@ -21,7 +21,8 @@ export const authenticationSlice = createSlice({
         isVerified: false,
         step: 0,
         isLoggedIn: false,
-        setupCard: false
+        setupCard: false,
+        status: null
     },
     reducers: {
         storeLoggedIn: (state, action) => {
@@ -55,28 +56,28 @@ export const authenticationSlice = createSlice({
             state.token = action.payload
         },
         resetAuth: (state) => {
-            state = {
-                ...state,
-                user: {
-                    'first_name' : '',
-                    'last_name' : '',
-                    'email' : '',
-                    'username' : '',
-                },
-                company: {
-                    'name' : '',
-                    'website' : '',
-                    'phone_number' : '',
-                    'enable_calls_to_number' : false
-                },
-                token: '',
-                zipCodeList: [],
-                isRegistering: false,
-                isVerified: false,
-                step: 0,
-                isLoggedIn: false,
-                setupCard: false
+            state.user = {
+                'first_name' : '',
+                'last_name' : '',
+                'email' : '',
+                'username' : '',
             }
+            state.company = {
+                'name' : '',
+                'website' : '',
+                'phone_number' : '',
+                'enable_calls_to_number' : false
+            }
+            state.token = ''
+            state.zipCodeList = []
+            state.isRegistering = false
+            state.isVerified = false
+            state.step = 0
+            state.isLoggedIn = false
+            state.setupCard = false
+        },
+        storeReset: (state, action) => {
+            state.status = action.payload
         }
     }
 });
@@ -93,6 +94,7 @@ export const {
     storeSetupCard,
     storeToken,
     resetAuth,
+    storeReset
 } = authenticationSlice.actions
 
 export default authenticationSlice.reducer

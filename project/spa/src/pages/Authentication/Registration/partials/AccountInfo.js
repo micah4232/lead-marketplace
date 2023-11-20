@@ -8,7 +8,7 @@ import CardInformation from './components/cardInformation';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { resetAuth, storeIsRegistering, storeLoggedIn } from '../../reducers/authenticationSlice';
+import { resetAuth, storeIsRegistering, storeLoggedIn, storeReset } from '../../reducers/authenticationSlice';
 import { onAlertShow } from '../../../../components/reducers/componentSlice';
 import { resetCategories } from '../../reducers/categoriesReducer';
 
@@ -33,11 +33,12 @@ function AccountInfo() {
                 alert : 'success',
                 message: 'Save Card detail Successful.'
             }))
-            dispatch(storeIsRegistering(false))
-            dispatch(storeLoggedIn(false))
-            // reset all
             dispatch(resetAuth())
             dispatch(resetCategories())
+            dispatch(storeIsRegistering(false))
+            dispatch(storeLoggedIn(false))
+            dispatch(storeReset('reset'))
+            // reset all
             navigate('/')
         }
         

@@ -7,10 +7,12 @@ import SideNavBar from "./components/SideNavBar";
 function Application() {
     const isRegistering = useSelector((state) => state.authentication.isRegistering)
     const isLoggedIn = useSelector((state) => state.authentication.isLoggedIn)
+    const token = useSelector((state) => state.authentication.token)
     const navigate = useNavigate()
 
     useEffect(() => {
-        if (isLoggedIn === false || isLoggedIn === undefined) {
+        console.log(token)
+        if (token === '') {
             navigate('/')
         }
     },[]);

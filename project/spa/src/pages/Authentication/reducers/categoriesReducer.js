@@ -41,15 +41,12 @@ export const categoriesSlice = createSlice({
             state.selectedServices[action.payload.index] = { ...state.selectedServices[action.payload.index], zip_group : action.payload.value }
         },
         resetCategories: (state) => {
-            state = {
-                ...state,
-                mainCategories: [],
-                subCategories: [],
-                servicesCategories: [],
-                selectedMain: null,
-                selectedSub: null,
-                selectedServices: [],
-            }
+            state.mainCategories = []
+            state.subCategories = []
+            state.servicesCategories = []
+            state.selectedMain = null
+            state.selectedSub = null
+            state.selectedServices = []
         }
     }
 });
