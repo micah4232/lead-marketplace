@@ -8,12 +8,17 @@ function Login() {
     const [password, setPassword] = useState()
     const isVerified = useSelector((state) => state.authentication.isVerified)
     const isRegistering = useSelector((state) => state.authentication.isRegistering)
+    const isLoggedIn = useSelector((state) => state.authentication.isLoggedIn)
 
     const navigate = useNavigate()
 
     useEffect(() => {
-        if (isVerified && !isRegistering) {
-            navigate("/app");
+        if (isLoggedIn) {
+            console.log(isVerified)
+            console.log(isRegistering)
+            console.log(isLoggedIn)
+            console.log('samoka!')
+            // navigate("/app");
         }
     }, []);
 

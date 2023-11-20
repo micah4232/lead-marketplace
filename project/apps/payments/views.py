@@ -14,11 +14,9 @@ stripe.api_key = settings.STRIPE_TEST_SECRET_KEY
 
 class SavingCardPaymentIntent(APIView):
 
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get(self, request, format=None):
+    def get(self, request, pk=None):
         # getting the customer id for the user
-        cust = Customer.objects.get(subscriber=request.user.id)
+        cust = Customer.objects.get(subscriber=pk)
         payment_intent = stripe.SetupIntent.create(
             customer=cust.id,
             automatic_payment_methods={"enabled": True},

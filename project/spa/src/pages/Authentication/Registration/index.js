@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import PersonalInfo from "./partials/PersonalInfo"
 import CustomerInfo from "./partials/CustomerInfo";
 import YourSettings from "./partials/YourSettings";
@@ -18,7 +18,12 @@ function Registration() {
     const isVerified = useSelector((state) => state.authentication.isVerified)
     const company = useSelector((state) => state.authentication.company)
     const selectedServices = useSelector((state) => state.category.selectedServices)
+    const selectedMain = useSelector((state) => state.category.selectedMain)
+    const selectedSub = useSelector((state) => state.category.selectedSub)
     const [bulkSaved, setBulkSaved] = useState(false)
+    const [companyUpdated, setCompanyUpdated] = useState(false)
+
+    const cardDetailForm = useRef(null)
     
     const navigate = useNavigate()
     const dispatch = useDispatch()
@@ -65,6 +70,24 @@ function Registration() {
                             alert: 'error',
                             message: error.response.data.website[0]
                         }))
+                    } else if (error.response.data.email) {
+                        dispatch(onAlertShow({
+                            show:true,
+                            alert: 'error',
+                            message: `${error.response.data.email[0]}\nMust be <name>@<domain>.<domain name>`
+                        }))
+                    } else if (error.response.data.password) {
+                        dispatch(onAlertShow({
+                            show:true,
+                            alert: 'error',
+                            message: 'Password must not be blank'
+                        }))
+                    } else if (error.response.data.confirm) {
+                        dispatch(onAlertShow({
+                            show:true,
+                            alert: 'error',
+                            message: error.response.data.confirm[0] == 'This field may not be blank.' ? 'Confirm password must not be blank' : error.response.data.confirm[0]
+                        }))
                     } else {
                         dispatch(onAlertShow({
                             show:true,
@@ -74,6 +97,8 @@ function Registration() {
                     }
                     
                 });
+            } else {
+                dispatch(storeIsVerified(true))
             }
 
             if (isVerified) {
@@ -82,7 +107,15 @@ function Registration() {
         }
         if (steps === 1) {
             // linking categories to your company
-            dispatch(storeStep(istep + 1))
+            if (selectedMain && selectedSub && selectedMain != 'default' && selectedSub != 'default') {
+                dispatch(storeStep(istep + 1))
+            } else {
+                dispatch(onAlertShow({
+                    show: true,
+                    alert: 'error',
+                    message: 'You haven\'t selected Selected Main Category and Sub Category'
+                }))
+            }
         }
         if (steps === 2) {
             if (company.phone_number === '') {
@@ -99,33 +132,40 @@ function Registration() {
                 }))
             } else {
                 // save to database.
-                CreateBulkBid(selectedServices, company.id).then(response => {
-                    setBulkSaved(true)
-                }).catch(error => {
-                    dispatch(onAlertShow({
-                        show: true,
-                        alert: 'error',
-                        message: 'Bid did not save to database.'
-                    }))
-                })
+                if (!bulkSaved) {
+                    CreateBulkBid(selectedServices, company.id).then(response => {
+                        setBulkSaved(true)
+                    }).catch(error => {
+                        dispatch(onAlertShow({
+                            show: true,
+                            alert: 'error',
+                            message: 'Bid did not save to database.'
+                        }))
+                    })
+                }
                 // save phone and enable_phone number
-                UpdateCompany(company).then(response => {
-                    console.log(response.data)
-                }).catch(error => {
+                if (!companyUpdated) {
+                    UpdateCompany(company).then(response => {
+                        setCompanyUpdated(true)
+                    }).catch(error => {
+                        dispatch(onAlertShow({
+                            show: true,
+                            alert: 'error',
+                            message: 'Updating company failed!'
+                        }))
+                    })
+                }
+                if(bulkSaved && companyUpdated) {
                     dispatch(onAlertShow({
                         show: true,
-                        alert: 'error',
-                        message: 'Updating company failed!'
+                        alert: 'success',
+                        message: 'Updated Company and Saved Bids Successful!'
                     }))
-                })
-                dispatch(storeStep(istep + 1))
+                    dispatch(storeStep(istep + 1))
+                }
+                
             }
 
-        }
-        if (steps === 3) {
-            dispatch(storeIsRegistering(false));
-            dispatch(storeLoggedIn(true))
-            navigate('/app')
         }
     }
 
@@ -192,9 +232,11 @@ function Registration() {
                         (steps === 3) ? <AccountInfo /> : ''
                     }
                     <div className="text-right pt-10">
-                        <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={onClickButton}>
+                        {
+                            !user.setupCard && steps === 3 ? '' :<button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={onClickButton}>
                             {buttonString()}
                         </button>
+                        }
                     </div>
                 </div>
             </div>

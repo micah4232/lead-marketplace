@@ -3,5 +3,5 @@ from .views import SavingCardPaymentIntent
 
 
 urlpatterns = [
-    path('save-card/', SavingCardPaymentIntent.as_view(), name='saving-card-to-customer'),
+    path('save-card/<int:pk>/', SavingCardPaymentIntent.as_view(), name='saving-card-to-customer'),
 ]

@@ -19,7 +19,8 @@ export const authenticationSlice = createSlice({
         isRegistering: false,
         isVerified: false,
         step: 0,
-        isLoggedIn: false
+        isLoggedIn: false,
+        setupCard: false
     },
     reducers: {
         storeLoggedIn: (state, action) => {
@@ -45,6 +46,9 @@ export const authenticationSlice = createSlice({
         },
         storeZipCodeList: (state, action) => {
             state.zipCodeList = [...state.zipCodeList, action.payload];
+        },
+        storeSetupCard: (state, action) => {
+            state.setupCard = action.payload
         }
     }
 });
@@ -57,7 +61,8 @@ export const {
     storeStep,
     storeZipCodeList,
     storeCompanyZipCode,
-    storeLoggedIn
+    storeLoggedIn,
+    storeSetupCard
 } = authenticationSlice.actions
 
 export default authenticationSlice.reducer

@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView, RetrieveAPIView, CreateAPIView
 from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
 from django.http import JsonResponse
 from django.conf import settings
 import requests as req

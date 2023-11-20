@@ -5,6 +5,7 @@ import { useState } from "react"
 function PersonalInfo() {
     const user = useSelector((state) => state.authentication.user)
     const company = useSelector((state) => state.authentication.company)
+    const [validEmail, setValidEmail] = useState(false)
     const [registerUser, setRegisterUser] = useState({
         ...user,
         password: '',
@@ -12,6 +13,9 @@ function PersonalInfo() {
     })
     const [registerCompany, setRegisterCompany] = useState({...company})
     const dispatch = useDispatch()
+    const validateEmail = new RegExp('^[a-z0-9]+@[a-z]+\.[a-z]{2,3}$');
+
+
     return (
         <>
             {
@@ -41,7 +45,17 @@ function PersonalInfo() {
                         </div>
                         <div>
                             <label for="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
-                            <input type="email" name="email" id="email" value={registerUser.email} onChange={(event) => { setRegisterUser({...registerUser, email: event.target.value});dispatch(storeUser(registerUser)) }} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@company.com" required="" />
+                            <input type="email" name="email" id="email" value={registerUser.email} onChange={(event) => {
+                                setRegisterUser({...registerUser, email: event.target.value});
+                                if (validateEmail.test(event.target.value)) {
+                                    setValidEmail(true)
+                                    dispatch(storeUser(registerUser));
+                                } else {
+                                    setValidEmail(false)
+                                }
+                                
+                                }} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@company.com" required="" />
+                            <p className={ !validEmail ? "text-red-700 text-xs ml-2" : "hidden"}>not an email</p>
                         </div>
                         <div>
                             <label for="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>

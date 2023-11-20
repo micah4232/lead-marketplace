@@ -1,13 +1,13 @@
 import { PaymentElement, useElements, useStripe } from "@stripe/react-stripe-js"
 import { Button } from "flowbite-react";
-import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { onAlertShow } from "../../../../../components/reducers/componentSlice";
+import { storeSetupCard } from "../../../reducers/authenticationSlice";
+
 
 function CardInformation(props) {
     const stripe = useStripe()
     const elements = useElements()
-    const [disableButton, setDisableButton] = useState(false)
     const dispatch = useDispatch()
 
     const handleSubmit = async (event) => {
@@ -24,7 +24,7 @@ function CardInformation(props) {
             console.log(submitError.message)
             return;
         }
-
+        dispatch(storeSetupCard(true))
         const result = await stripe.confirmSetup({
             elements,
             confirmParams: {
@@ -34,27 +34,20 @@ function CardInformation(props) {
 
         if (result.error) {
             // Show error to your customer (for example, payment details incomplete)
-            console.log(result.error.message);
+            dispatch(storeSetupCard(false))
             dispatch(onAlertShow({
                 show: true,
                 alert: 'error',
                 message: result.error.message
-            }))
-        } else {
-            setDisableButton(true)
-            dispatch(onAlertShow({
-                show: true,
-                alert: 'success',
-                message: 'Card Setup Success!'
             }))
         }
     }
 
     return (
         <>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} ref={props.toSubmit}>
                 <PaymentElement />
-                <Button disable={disableButton} type="submit">Setup</Button>
+                <Button type="submit">Setup</Button>
             </form>
         </>
     )
