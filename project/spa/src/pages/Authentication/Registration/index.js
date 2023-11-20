@@ -40,6 +40,9 @@ function Registration() {
             butt = 'Verify'
         }
 
+        if (steps === 2 && !bulkSaved && !companyUpdated) {
+            butt = 'Save'
+        }
         return butt
     }
 
@@ -156,12 +159,13 @@ function Registration() {
                     })
                 }
                 if(bulkSaved && companyUpdated) {
+                    dispatch(storeStep(istep + 1))
+                } else {
                     dispatch(onAlertShow({
                         show: true,
                         alert: 'success',
                         message: 'Updated Company and Saved Bids Successful!'
                     }))
-                    dispatch(storeStep(istep + 1))
                 }
                 
             }

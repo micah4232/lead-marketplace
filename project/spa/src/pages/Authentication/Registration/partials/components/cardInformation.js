@@ -16,7 +16,7 @@ function CardInformation(props) {
         if (elements == null) {
             return;
         }
-
+        dispatch(storeSetupCard(true))
         const {error: submitError} = await elements.submit();
         if (submitError) {
             // Show error to your customer
@@ -24,7 +24,7 @@ function CardInformation(props) {
             console.log(submitError.message)
             return;
         }
-        dispatch(storeSetupCard(true))
+        
         const result = await stripe.confirmSetup({
             elements,
             confirmParams: {

@@ -2,6 +2,10 @@ import { Label, TextInput, Checkbox, Button } from "flowbite-react"
 import { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
 import { Link, useNavigate } from "react-router-dom"
+import { LoginAPI } from "./api"
+import { useDispatch } from "react-redux"
+import { storeToken } from "../reducers/authenticationSlice"
+import { onAlertShow } from "../../../components/reducers/componentSlice"
 
 function Login() {
     const [email, setEmail] = useState()
@@ -11,14 +15,14 @@ function Login() {
     const isLoggedIn = useSelector((state) => state.authentication.isLoggedIn)
 
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     useEffect(() => {
         if (isLoggedIn) {
-            console.log(isVerified)
-            console.log(isRegistering)
-            console.log(isLoggedIn)
-            console.log('samoka!')
-            // navigate("/app");
+            navigate("/app");
+        }
+        if (isRegistering) {
+            navigate("/registration")
         }
     }, []);
 
@@ -31,14 +35,11 @@ function Login() {
                 <form className="flex max-w-md flex-col gap-4">
                     <div>
                         <div className="mb-2 block">
-                        <Label
-                            htmlFor="email1"
-                            value="Your email"
-                        />
+                        <Label value="Username" />
                         </div>
                         <TextInput
                         id="email1"
-                        placeholder="your@email.com"
+                        placeholder="username"
                         required
                         type="email"
                         value={email}
@@ -48,8 +49,7 @@ function Login() {
                     <div>
                         <div className="mb-2 block">
                         <Label
-                            htmlFor="password1"
-                            value="Your password"
+                            value="Password"
                         />
                         </div>
                         <TextInput
@@ -66,7 +66,17 @@ function Login() {
                             Remember me
                         </Label>
                     </div>
-                    <Button type="button">
+                    <Button type="button" onClick={() => {
+                        LoginAPI(email, password).then(response => {
+                            dispatch(storeToken(response.data.auth_token))
+                        }).catch(error => {
+                            dispatch(onAlertShow({
+                                show : true,
+                                alert : 'error',
+                                message : 'Credentials are incorrect, please try again.'
+                            }))
+                        })
+                    }}>
                         Submit
                     </Button>
                     <div className="text-center">

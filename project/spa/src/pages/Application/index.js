@@ -10,9 +10,7 @@ function Application() {
     const navigate = useNavigate()
 
     useEffect(() => {
-        console.log('samoka')
-        if (isLoggedIn === false) {
-            console.log('grabe!')
+        if (isLoggedIn === false || isLoggedIn === undefined) {
             navigate('/')
         }
     },[]);

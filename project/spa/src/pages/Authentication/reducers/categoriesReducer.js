@@ -39,6 +39,17 @@ export const categoriesSlice = createSlice({
         },
         onChangeZipGroup: (state, action) => {
             state.selectedServices[action.payload.index] = { ...state.selectedServices[action.payload.index], zip_group : action.payload.value }
+        },
+        resetCategories: (state) => {
+            state = {
+                ...state,
+                mainCategories: [],
+                subCategories: [],
+                servicesCategories: [],
+                selectedMain: null,
+                selectedSub: null,
+                selectedServices: [],
+            }
         }
     }
 });
@@ -51,7 +62,8 @@ export const {
     storeSelectedMain,
     storeSelectedServices,
     onChangePrice,
-    onChangeZipGroup
+    onChangeZipGroup,
+    resetCategories
 } = categoriesSlice.actions;
 
 export default categoriesSlice.reducer;
