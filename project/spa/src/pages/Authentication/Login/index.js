@@ -7,20 +7,20 @@ import { useDispatch } from "react-redux"
 import { resetAuth, storeLoggedIn, storeReset, storeToken } from "../reducers/authenticationSlice"
 import { onAlertShow } from "../../../components/reducers/componentSlice"
 import { resetCategories } from "../reducers/categoriesReducer"
+import LogoBrand from "../../../components/LogoBrand"
 
 function Login() {
     const [email, setEmail] = useState()
     const [password, setPassword] = useState()
-    const isVerified = useSelector((state) => state.authentication.isVerified)
     const isRegistering = useSelector((state) => state.authentication.isRegistering)
-    const isLoggedIn = useSelector((state) => state.authentication.isLoggedIn)
+    const token = useSelector((state) => state.authentication.token)
     const status = useSelector((state) => state.authentication.status)
 
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
     useEffect(() => {
-        if (isLoggedIn) {
+        if(token != '') {
             navigate("/app");
         }
         if (isRegistering) {
@@ -31,10 +31,11 @@ function Login() {
             dispatch(resetCategories())
             dispatch(storeReset(null))
         }
-    }, []);
+    }, [navigate, dispatch, status, token, isRegistering]);
 
     return (
         <div className="mt-20" style={{width: 500}}>
+            <LogoBrand />
             <div className="flex items-center justify-center w-full text-sm font-medium text-center text-gray-500 bg-[#D4DAF9] p-10">
                 <h1 className="text-xl font-bold">Login</h1>
             </div>
@@ -46,10 +47,10 @@ function Login() {
                         </div>
                         <TextInput
                         id="email1"
-                        placeholder="username"
+                        placeholder="Username"
                         required
                         type="email"
-                        value={email}
+                        defaultValue={email}
                         onChange={(event)=>setEmail(event.target.value)}
                         />
                     </div>
@@ -62,7 +63,8 @@ function Login() {
                         <TextInput
                         id="password1"
                         required
-                        value={password}
+                        placeholder="Password"
+                        defaultValue={password}
                         onChange={(event) => setPassword(event.target.value)}
                         type="password"
                         />
@@ -77,6 +79,7 @@ function Login() {
                         LoginAPI(email, password).then(response => {
                             dispatch(storeToken(response.data.auth_token))
                             dispatch(storeLoggedIn(true))
+                            navigate('/app')
                         }).catch(error => {
                             dispatch(onAlertShow({
                                 show : true,

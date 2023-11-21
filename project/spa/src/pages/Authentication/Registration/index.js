@@ -11,6 +11,7 @@ import { useDispatch } from "react-redux";
 import { storeIsRegistering, storeIsVerified, storeLoggedIn, storeStep, storeUser } from "../reducers/authenticationSlice";
 import { useNavigate } from "react-router-dom";
 import { onAlertShow } from "../../../components/reducers/componentSlice";
+import LogoBrand from "../../../components/LogoBrand";
 
 function Registration() {
     const user = useSelector((state) => state.authentication.user);
@@ -179,6 +180,7 @@ function Registration() {
 
     return (
         <div className="mt-20" style={{width: 800}}>
+            <LogoBrand />
             <div className="">
                 <ol className="flex items-center w-full text-sm font-medium text-center text-gray-500 dark:text-gray-400 sm:text-base bg-[#D4DAF9] p-10">
                     <li className={(steps === 0) ? "flex md:w-full items-center dark:text-blue-500 sm:after:content-[''] after:w-full after:h-1 after:border-b after:border-gray-200 after:border-1 after:hidden sm:after:inline-block after:mx-6 xl:after:mx-10 dark:after:border-gray-700" : "text-blue-600 flex md:w-full items-center dark:text-blue-500 sm:after:content-[''] after:w-full after:h-1 after:border-b after:border-gray-200 after:border-1 after:hidden sm:after:inline-block after:mx-6 xl:after:mx-10 dark:after:border-gray-700"}>

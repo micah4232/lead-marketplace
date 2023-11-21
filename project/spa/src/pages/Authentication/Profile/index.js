@@ -1,10 +1,20 @@
 import { useSelector } from "react-redux";
 import NameHeader from "./partials/nameHeader";
+import { useEffect } from "react";
+import { getProfile } from "./api";
 
 
 export default function Profile() {
     const user = useSelector((state) => state.authentication.user)
     const company = useSelector((state) => state.authentication.company)
+    const token = useSelector((state) => state.authentication.token)
+
+    useEffect(() => {
+        getProfile(token).then(response => {
+            console.log(response.data)
+        })
+    }, [token, getProfile])
+    
     return (
         <div className="w-full px-6 py-6 mx-auto drop-zone text-slate-500">
             <NameHeader />

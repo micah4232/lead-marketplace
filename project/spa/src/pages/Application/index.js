@@ -3,19 +3,31 @@ import { useSelector } from "react-redux";
 import { Outlet, redirect, useNavigate } from "react-router-dom";
 import TopNavigation from "./components/TopNavigation";
 import SideNavBar from "./components/SideNavBar";
+import { getProfileMe } from "./api";
+import { useDispatch } from "react-redux";
+import { storeUser } from "../Authentication/reducers/authenticationSlice";
 
 function Application() {
-    const isRegistering = useSelector((state) => state.authentication.isRegistering)
-    const isLoggedIn = useSelector((state) => state.authentication.isLoggedIn)
-    const token = useSelector((state) => state.authentication.token)
+    const auth = useSelector((state) => state.authentication)
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     useEffect(() => {
-        console.log(token)
-        if (token === '') {
+        if (auth.token === '') {
             navigate('/')
+        } else {
+            getProfileMe(auth.token).then(response => {
+                dispatch(storeUser({
+                    ...auth.user,
+                    id : response.data.id,
+                    email : response.data.email,
+                    username : response.data.username
+                }))
+            }).catch(error => {
+
+            })
         }
-    },[]);
+    },[navigate,auth.token]);
 
     return (
         <>

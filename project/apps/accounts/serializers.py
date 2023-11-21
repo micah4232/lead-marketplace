@@ -8,8 +8,8 @@ from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 from rest_framework.settings import api_settings
 from djoser.conf import settings
-from djoser.serializers import UserCreateSerializer
-from djstripe.models import Customer
+from djoser.serializers import UserCreateSerializer, UserSerializer
+from djstripe.models import Customer, PaymentMethod
 
 from .models import (
     Company, 
@@ -162,3 +162,28 @@ class CompanyServcesSerializer(serializers.ModelSerializer):
             service_obj = ServiceCategories.objects.get(service)
             CompanyServices.objects.create(company=company_obj, service=service_obj)
         return validated_data
+
+class UserProfileSerializer(UserSerializer):
+
+    company = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = tuple(User.REQUIRED_FIELDS) + (
+            settings.LOGIN_FIELD,
+            'company',
+            'first_name',
+            'last_name'
+        )
+    
+    def get_company(self, obj):
+        profile = Profile.objects.get(user=obj.id)
+        customer = Customer.objects.get(subscriber=obj.id)
+        payment_method = PaymentMethod.objects.get(customer=customer.id)
+        return {
+            'name' : profile.company.name,
+            'website' : profile.company.website,
+            'phone_number_for_lead' : profile.company.phone_number_for_lead,
+            'enable_calls_to_number' : profile.company.enable_calls_to_number,
+            'payment_method' : payment_method.card
+        }
