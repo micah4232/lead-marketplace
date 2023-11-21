@@ -5,7 +5,7 @@ import TopNavigation from "./components/TopNavigation";
 import SideNavBar from "./components/SideNavBar";
 import { getProfileMe } from "./api";
 import { useDispatch } from "react-redux";
-import { storeUser } from "../Authentication/reducers/authenticationSlice";
+import { storeCompany, storeUser } from "../Authentication/reducers/authenticationSlice";
 
 function Application() {
     const auth = useSelector((state) => state.authentication)
@@ -17,17 +17,28 @@ function Application() {
             navigate('/')
         } else {
             getProfileMe(auth.token).then(response => {
+                const data = response.data;
                 dispatch(storeUser({
                     ...auth.user,
-                    id : response.data.id,
-                    email : response.data.email,
-                    username : response.data.username
+                    id : data.id,
+                    email : data.email,
+                    username : data.username,
+                    first_name : data.first_name,
+                    last_name : data.last_name
+                }));
+                dispatch(storeCompany({
+                    ...auth.company,
+                    name : data.company.name,
+                    website : data.company.website,
+                    phone_number : data.company.phone_number_for_lead,
+                    enable_calls_to_number : data.company.enable_calls_to_number,
+                    payment_method: data.company.payment_method
                 }))
             }).catch(error => {
-
+                console.log(error.response.data)
             })
         }
-    },[navigate,auth.token]);
+    },[navigate,auth.token, dispatch, storeUser, storeCompany]);
 
     return (
         <>

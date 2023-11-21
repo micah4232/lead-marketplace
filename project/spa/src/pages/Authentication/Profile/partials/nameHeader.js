@@ -1,3 +1,4 @@
+import { FaJedi } from "react-icons/fa"
 import { useSelector } from "react-redux"
 
 export default function NameHeader () {
@@ -6,9 +7,9 @@ export default function NameHeader () {
         <div className="relative flex flex-col flex-auto min-w-0 p-4 overflow-hidden break-words border-0 shadow rounded-2xl bg-white/80 bg-clip-border mb-4 draggable" draggable="true">
             <div className="flex flex-wrap -mx-3">
                 <div className="flex-none w-auto max-w-full px-3">
-                <div className="text-base ease-soft-in-out h-18.5 w-18.5 relative inline-flex items-center justify-center rounded-xl text-white transition-all duration-200">
-                    <img src="https://demos.creative-tim.com/soft-ui-dashboard-tailwind/assets/img/bruce-mars.jpg" alt="profile_image" className="w-full shadow-soft-sm rounded-xl"/>
-                </div>
+                    <div className="text-base ease-soft-in-out h-18.5 w-18.5 relative inline-flex items-center justify-center rounded-xl text-white transition-all duration-200">
+                        <FaJedi className="text-black text-6xl" />
+                    </div>
                 </div>
                 <div className="flex-none w-auto max-w-full px-3 my-auto">
                 <div className="h-full">
