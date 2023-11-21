@@ -5,22 +5,44 @@ import Faq from './components/accordion';
 import { useEffect, useState } from 'react';
 import { SaveCard } from '../api';
 import CardInformation from './components/cardInformation';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { resetAuth, storeIsRegistering, storeLoggedIn, storeReset } from '../../reducers/authenticationSlice';
+import { onAlertShow } from '../../../../components/reducers/componentSlice';
+import { resetCategories } from '../../reducers/categoriesReducer';
 
 
 const stripePromise = loadStripe('pk_test_51LkibiL2np5xQYI5huhZzd47cDwtjKo9hMsbN50toCpZtYmx1oadMmJHH0IEVuxvxYc7rpnU5zZQSU6TjNXvD5bY0090F0kFUw');
 
 function AccountInfo() {
     const [options,setOptions] = useState(null);
+    const user = useSelector((state) => state.authentication.user)
+    const setup = useSelector((state) => state.authentication.setupCard)
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     useEffect(() => {
-        SaveCard('c44e71fa4c97f14d612904e7770c4b42aede57d5').then(response => {
-            setOptions({clientSecret: response.data})
-        });
+        if (!setup) {
+            SaveCard(user.id).then(response => {
+                setOptions({clientSecret: response.data})
+            });
+        } else {
+            dispatch(onAlertShow({
+                show : true,
+                alert : 'success',
+                message: 'Save Card detail Successful.'
+            }))
+            dispatch(resetAuth())
+            dispatch(resetCategories())
+            dispatch(storeIsRegistering(false))
+            dispatch(storeLoggedIn(false))
+            dispatch(storeReset('reset'))
+            // reset all
+            navigate('/')
+        }
+        
     }, [])
-
-    const handleSubmit = (event) => {
-        event.preventDefault();
-    }
 
     return (
         <div className="grid grid-cols-2 gap-4">

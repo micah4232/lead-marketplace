@@ -1,3 +1,4 @@
+import { useSelector } from "react-redux"
 import LeadsDataTable from "../../../../components/LeadsDataTable"
 import CampaignCard from "./components/CampaignCard"
 import StatementCard from "./components/StatementCard"
@@ -6,6 +7,7 @@ import { FaArrowUp, FaArrowDown } from 'react-icons/fa'
 
 
 function Dashboard() {
+    const auth = useSelector((state) => state.authentication)
     const headers = [
         '',
         'Date',
@@ -34,7 +36,7 @@ function Dashboard() {
     ]
     return (
         <>
-            <h2 className="mb-10 text-4xl font-bold">Welcome Company</h2>
+            <h2 className="mb-10 text-4xl font-bold">Welcome { auth.company.name }</h2>
             {/* Total Stats Here */}
             <div className="grid grid-cols-4 gap-4">
                 <div>

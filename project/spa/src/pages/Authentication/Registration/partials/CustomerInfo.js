@@ -11,6 +11,7 @@ import ZipCard from './components/zipCard';
 import { useSelector } from 'react-redux';
 import * as _ from 'lodash'
 import { storeCompany, storeCompanyZipCode, storeZipCodeList } from '../../reducers/authenticationSlice';
+import { onAlertShow } from '../../../../components/reducers/componentSlice';
 
 
 function CustomerInfo() {
@@ -114,7 +115,13 @@ function CustomerInfo() {
                 setModal(false)
             }
         }).catch(error => {
-            console.log(error)
+            if (error.response.data.name) {
+                dispatch(onAlertShow({
+                    show: true,
+                    alert: 'error',
+                    message: 'Zip Code Name is Required'
+                }))
+            }
         });
         
     }

@@ -3,19 +3,42 @@ import { useSelector } from "react-redux";
 import { Outlet, redirect, useNavigate } from "react-router-dom";
 import TopNavigation from "./components/TopNavigation";
 import SideNavBar from "./components/SideNavBar";
+import { getProfileMe } from "./api";
+import { useDispatch } from "react-redux";
+import { storeCompany, storeUser } from "../Authentication/reducers/authenticationSlice";
 
 function Application() {
-    const isRegistering = useSelector((state) => state.authentication.isRegistering)
-    const isLoggedIn = useSelector((state) => state.authentication.isLoggedIn)
+    const auth = useSelector((state) => state.authentication)
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     useEffect(() => {
-        console.log('samoka')
-        if (isLoggedIn === false) {
-            console.log('grabe!')
+        if (auth.token === '') {
             navigate('/')
+        } else {
+            getProfileMe(auth.token).then(response => {
+                const data = response.data;
+                dispatch(storeUser({
+                    ...auth.user,
+                    id : data.id,
+                    email : data.email,
+                    username : data.username,
+                    first_name : data.first_name,
+                    last_name : data.last_name
+                }));
+                dispatch(storeCompany({
+                    ...auth.company,
+                    name : data.company.name,
+                    website : data.company.website,
+                    phone_number : data.company.phone_number_for_lead,
+                    enable_calls_to_number : data.company.enable_calls_to_number,
+                    payment_method: data.company.payment_method
+                }))
+            }).catch(error => {
+                console.log(error.response.data)
+            })
         }
-    },[]);
+    },[navigate,auth.token, dispatch, storeUser, storeCompany]);
 
     return (
         <>

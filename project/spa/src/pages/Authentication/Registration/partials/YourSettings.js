@@ -60,12 +60,12 @@ function YourSettings() {
                 value={company.phone_number}
                 onChange={(phone) => dispatch(storeCompany({...company, phone_number: phone}))}
                 />
-                {/* <input type="text" id="phone_number" value={company.phone_number} onChange={(event) => dispatch(storeCompany({...company, phone_number: event.target.value}))} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Phone Number" required /> */}
+                {/* <input type="text" id="phone_number" value={company.phone_number} onChange={(event) => dispatch(storeCompany({...company, phone_number: event.target.value}))} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Phone Number" required /> */}
                 <p className="text-sm">Note: You can edit this, as well as set notifications for when a lead has been delivered, in your account.</p>
             </div>
-            <div class="flex items-center mb-4 mt-5">
-                <input id="default-checkbox" type="checkbox" checked={company.enable_calls_to_phone} onChange={(event) => dispatch(storeCompany({...company, enable_calls_to_phone: !company.enable_calls_to_phone}))} class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
-                <label for="default-checkbox" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Record Phone Calls & Enable Lead Review</label>
+            <div className="flex items-center mb-4 mt-5">
+                <input id="default-checkbox" type="checkbox" checked={company.enable_calls_to_phone} onChange={(event) => dispatch(storeCompany({...company, enable_calls_to_phone: !company.enable_calls_to_phone}))} className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
+                <label for="default-checkbox" className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Record Phone Calls & Enable Lead Review</label>
             </div>
             <p><strong>REQUERED for Lead Review</strong>. You must Opt-In to Call Recording in order for you to be able to submit leads for review. which ensures that you will not pay for any non-billable leads.</p>
         </div>

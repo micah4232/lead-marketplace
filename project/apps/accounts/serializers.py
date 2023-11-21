@@ -1,13 +1,15 @@
-from djoser.serializers import UserCreateSerializer
 from django.contrib.auth import get_user_model
 from django.conf import settings as django_settings
-from rest_framework import serializers
-from django.db import IntegrityError, transaction
-from djoser.conf import settings
-from rest_framework.settings import api_settings
 from django.contrib.auth.password_validation import validate_password
 from django.core import exceptions as django_exceptions
-from djstripe.models import Customer
+from django.db import IntegrityError, transaction
+
+from rest_framework import serializers
+from rest_framework.authtoken.models import Token
+from rest_framework.settings import api_settings
+from djoser.conf import settings
+from djoser.serializers import UserCreateSerializer, UserSerializer
+from djstripe.models import Customer, PaymentMethod
 
 from .models import (
     Company, 
@@ -95,8 +97,8 @@ class RegistrationSerializer(UserCreateSerializer):
         with transaction.atomic():
             user = User.objects.create_user(**validated_data)
             # create a customer with payment intent
-            customer = Customer.create(subscriber=user)
-            customer.save(name=f"{user.first_name} {user.last_name}")
+            Customer.create(subscriber=user)
+            # create token here
             if settings.SEND_ACTIVATION_EMAIL:
                 user.is_active = False
                 user.save(update_fields=["is_active"])
@@ -160,3 +162,28 @@ class CompanyServcesSerializer(serializers.ModelSerializer):
             service_obj = ServiceCategories.objects.get(service)
             CompanyServices.objects.create(company=company_obj, service=service_obj)
         return validated_data
+
+class UserProfileSerializer(UserSerializer):
+
+    company = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = tuple(User.REQUIRED_FIELDS) + (
+            settings.LOGIN_FIELD,
+            'company',
+            'first_name',
+            'last_name'
+        )
+    
+    def get_company(self, obj):
+        profile = Profile.objects.get(user=obj.id)
+        customer = Customer.objects.get(subscriber=obj.id)
+        payment_method = PaymentMethod.objects.get(customer=customer.id)
+        return {
+            'name' : profile.company.name,
+            'website' : profile.company.website,
+            'phone_number_for_lead' : profile.company.phone_number_for_lead,
+            'enable_calls_to_number' : profile.company.enable_calls_to_number,
+            'payment_method' : payment_method.card
+        }
