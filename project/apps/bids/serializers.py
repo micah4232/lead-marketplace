@@ -3,7 +3,7 @@ from .models import Bid
 from apps.accounts.models import Company
 
 class BidSerializers(serializers.ModelSerializer):
-    service = serializers.StringRelatedField()
+    
     class Meta:
         model = Bid
         fields = '__all__'
@@ -27,6 +27,8 @@ class BulkSavingSerializers(serializers.Serializer):
 
 
 class ListBidSerializers(serializers.ModelSerializer):
+    service = serializers.StringRelatedField()
+    
     class Meta:
         model = Bid
         fields = '__all__'

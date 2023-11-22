@@ -3,7 +3,7 @@ from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveUpdateDe
 from rest_framework.permissions import IsAuthenticated
 
 from .models import Bid
-from .serializers import BidSerializers, BulkSavingSerializers
+from .serializers import BidSerializers, BulkSavingSerializers, ListBidSerializers
 from apps.accounts.models import Company
 
 # Create your views here.
@@ -16,7 +16,7 @@ class BulkCreateBidAPIView(CreateAPIView):
 
 class ListBidByCompanyIdAPIVIew(ListAPIView):
     permission_classes = [IsAuthenticated]
-    serializer_class = BidSerializers
+    serializer_class = ListBidSerializers
     queryset = Bid.objects.all()
 
     def filter_queryset(self, queryset):
