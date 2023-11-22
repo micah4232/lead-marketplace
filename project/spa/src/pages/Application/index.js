@@ -28,6 +28,7 @@ function Application() {
                 }));
                 dispatch(storeCompany({
                     ...auth.company,
+                    id : data.company.id,
                     name : data.company.name,
                     website : data.company.website,
                     phone_number : data.company.phone_number_for_lead,

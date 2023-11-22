@@ -4,6 +4,7 @@ import authenticationSlice from './pages/Authentication/reducers/authenticationS
 import categoriesReducer from './pages/Authentication/reducers/categoriesReducer'
 import storage from 'redux-persist/lib/storage'
 import componentSlice from './components/reducers/componentSlice';
+import campaignSlice from './pages/Application/pages/Campaigns/reducers/campaignSlice';
 
 const persistConfig = {
     key: 'root',
@@ -13,7 +14,8 @@ const persistConfig = {
 const rootReducer = combineReducers({
     authentication: authenticationSlice,
     category: categoriesReducer,
-    component: componentSlice
+    component: componentSlice,
+    campaign: campaignSlice,
 })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

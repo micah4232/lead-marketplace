@@ -181,6 +181,7 @@ class UserProfileSerializer(UserSerializer):
         customer = Customer.objects.get(subscriber=obj.id)
         payment_method = PaymentMethod.objects.get(customer=customer.id)
         return {
+            'id' : profile.company.id,
             'name' : profile.company.name,
             'website' : profile.company.website,
             'phone_number_for_lead' : profile.company.phone_number_for_lead,
