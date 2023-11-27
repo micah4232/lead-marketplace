@@ -5,14 +5,15 @@ from rest_framework.permissions import IsAuthenticated
 from django.http import JsonResponse
 from django.conf import settings
 import requests as req
-from .models import MainCategory, SubCategory, ServiceCategories, Profile, Company
+from .models import MainCategory, SubCategory, ServiceCategories, Profile, Company, RadiusZipCode
 from .serializers import (
     MainCategorySerializers, 
     SubCategorySerializers, 
     ServiceCategorySerializers,
     ProfileSerializer,
     CompanyZipSerializer,
-    CompanySerializer
+    CompanySerializer,
+    RadiusZipCodeSerializer
 )
 
 # Create your views here.
@@ -84,6 +85,16 @@ class GetZipCodeAPIView(APIView):
         get_zip = req.get(f'{zip_code_url}',headers=headers, params=params)
         
         return JsonResponse(get_zip.json())
+
+
+class ListZipCodeGroupAPIView(ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = RadiusZipCodeSerializer
+    queryset = RadiusZipCode.objects.all()
+
+
+    def filter_queryset(self, queryset):
+        return queryset.filter(company__id=self.kwargs.get('pk', ''))
 
 
 class RetrieveUpdateDeleteCompanyAPIVIew(RetrieveUpdateDestroyAPIView):

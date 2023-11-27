@@ -1,18 +1,21 @@
 import { FaPlus } from "react-icons/fa";
 import { useEffect, useState } from "react"
 import Card from "./components/campaignCard"
-import { getCampaignList } from "./api"
+import { getCampaignList, getListZipCodeGroupCompany } from "./api"
 import { useSelector } from "react-redux"
 import { useDispatch } from "react-redux"
-import { storeCampaigns } from "./reducers/campaignSlice"
-import { Label, Modal, Select, TextInput } from "flowbite-react";
-import { GetMainCategories, GetServiceBySub, GetSubCategoriesByMainId } from "../../../Authentication/Registration/api";
+import { storeCampaigns, storeZipCodeGroup } from "./reducers/campaignSlice"
+import { Button, Label, Modal, Select, TextInput, Textarea } from "flowbite-react";
+import { GetMainCategories, GetServiceBySub, GetSubCategoriesByMainId, GetZipCode } from "../../../Authentication/Registration/api";
 import { storeMainCategories, storeSelectedMain, storeSubCategories } from "../../../Authentication/reducers/categoriesReducer";
+import { onAlertShow } from "../../../../components/reducers/componentSlice";
+import ZipCard from "../../../Authentication/Registration/partials/components/zipCard";
 
 function Campaigns() {
     const token = useSelector((state) => state.authentication.token)
     const company = useSelector((state) => state.authentication.company)
     const campaigns = useSelector((state) => state.campaign.campaigns)
+    const zipCodeGroup = useSelector((state) => state.campaign.zipCodeGroup)
     const mainCategories = useSelector((state) => state.category.mainCategories)
     const subCategories = useSelector((state) => state.category.subCategories)
     const dispatch = useDispatch()
@@ -34,6 +37,9 @@ function Campaigns() {
         "zip_group": null,
         "service": null
     })
+    const [zipCodes, setZipCodes] = useState([])
+    const [zip, setZip] = useState(null)
+    const [distance, setDistance] = useState(null)
 
     useEffect(() => {
         if (campaigns.length === 0) {
@@ -43,6 +49,14 @@ function Campaigns() {
     
             })
         }
+
+        if (!zipCodeGroup) {
+            getListZipCodeGroupCompany(token, company.id).then(response => {
+                console.log(response.data)
+                // dispatch(storeZipCodeGroup(response.data))
+            })
+        }
+
         if (mainCategories.length === 0) {
             GetMainCategories().then(response => {
                 dispatch(storeMainCategories(response.data))
@@ -89,6 +103,35 @@ function Campaigns() {
         })
     }
 
+    const onFindZipCode = () => {
+        if (zip && distance) {
+            GetZipCode(zip, distance).then(response => {
+                setZipCodes(response.data.results)
+            }).catch(error => {
+                console.log('error on zipcode')
+            })
+        } else {
+            dispatch(onAlertShow({
+                show: true,
+                alert: 'error',
+                message: 'Zip code and Distance is required if you want to find zip code'
+            }))
+        }
+        
+    }
+
+    const onAddZipeCode = () => {
+        setZipCodes([
+            ...zipCodes,
+            {
+                code : zip,
+                city: '',
+                state: ''
+            }
+        ])
+        setZip(null)
+    }
+
     return (
         <>
             <h1 className="font-extrabold text-3xl mb-5">Campaign Manager</h1>
@@ -107,57 +150,102 @@ function Campaigns() {
                     </div>
                 </div>
             </div>
-            <Modal show={modal} onClose={() => setModal(false)}>
+            <Modal show={modal} size="7xl" onClose={() => setModal(false)}>
                 <Modal.Header>
                     { modalTitle }
                 </Modal.Header>
                 <Modal.Body>
                     <form className="flex w-full flex-col gap-4">
-                        {
-                            onCreate ? <>
-                                    <div>
-                                        <div className="mb-2 block">
-                                            <Label value="Select Main Category" />
-                                        </div>
-                                        <Select onChange={onChangeMainCategory}>
-                                            <option value="default">Choose your Main Category</option>
-                                            {
-                                                mainCategories.map(obj => <option value={obj.id} key={obj.id}>{obj.name}</option>)
-                                            }
-                                        </Select>
-                                    </div>
-                                    <div>
-                                    <div className="mb-2 block">
-                                        <Label value="Select Sub Category" />
-                                        </div>
-                                        <Select onChange={onChangeSubCategory} disabled={disabled.sub}>
-                                            <option value="default">Select Sub Categories</option>
-                                            {
-                                                subCategories.map(obj => <option value={obj.id} key={obj.id}>{obj.name}</option>)
-                                            }
-                                        </Select>
-                                    </div>
-                                    <div>
-                                    <div className="mb-2 block">
-                                        <Label value="Services" />
-                                        </div>
-                                        <Select onChange={onChangeServices} disabled={disabled.service}>
-                                            {
-                                                services.map(obj => <option value={obj.id} key={obj.id}>{obj.name}</option>)
-                                            }
-                                        </Select>
-                                    </div>
-                            </> : ''
-                        }
-                        
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <div>
+                                <div className="mb-2 block">
+                                    <Label value="Select Main Category" />
+                                </div>
+                                <Select onChange={onChangeMainCategory}>
+                                    <option value="default">Choose your Main Category</option>
+                                    {
+                                        mainCategories.map(obj => <option value={obj.id} key={obj.id}>{obj.name}</option>)
+                                    }
+                                </Select>
+                            </div>
+                            <div>
+                                <div className="mb-2 block">
+                                    <Label value="Select Sub Category" />
+                                </div>
+                                <Select onChange={onChangeSubCategory} disabled={disabled.sub}>
+                                    <option value="default">Select Sub Categories</option>
+                                    {
+                                        subCategories.map(obj => <option value={obj.id} key={obj.id}>{obj.name}</option>)
+                                    }
+                                </Select>
+                            </div>
+                            <div>
+                                <div className="mb-2 block">
+                                <Label value="Services" />
+                                </div>
+                                <Select onChange={onChangeServices} disabled={disabled.service}>
+                                    {
+                                        services.map(obj => <option value={obj.id} key={obj.id}>{obj.name}</option>)
+                                    }
+                                </Select>
+                            </div>
+                            <div>
+                                <div className="mb-2 block">
+                                    <Label value="Description" />
+                                </div>
+                                <Textarea placeholder="Short Description of your Campaign..." rows={10} />
+                            </div>
+                        </div>
                         <div>
                             <div className="mb-2 block">
-                                <Label value="Zip Code" />
+                                <Label value="Zip Code Group" className="font-bold" />
                             </div>
-                            <TextInput type="text" required shadow />
+                            <Select>
+                                <option value="default">Zip Code Group</option>
+                            </Select>
+                            <div className="flex flex-row gap-4 justify-center align content-center">
+                                <div className="basis-1/4">
+                                    <div className="mb-2 block">
+                                        <Label value="Zip Code" className="font-bold" />
+                                    </div>
+                                    <TextInput type="number" value={zip} required shadow onChange={(event) => {
+                                        setZip(event.target.value);
+                                    }} />
+                                </div>
+                                <div className="basis-1/4">
+                                    <div className="mb-2 block">
+                                        <Label value="Miles" className="font-bold" />
+                                    </div>
+                                    <TextInput type="number" value={distance} required shadow onChange={(event) => {
+                                        setDistance(event.target.value)
+                                    }} />
+                                </div>
+                                <div className="basis-1/4 flex justify-center items-end">
+                                    <Button onClick={onAddZipeCode}>Add Zip Code</Button>
+                                </div>
+                                <div className="basis-1/4 flex justify-center items-end">
+                                    <Button onClick={onFindZipCode}>Find Zip Code</Button>
+                                </div>
+                                {/* all zipcodes here please */}
+                                
+                            </div>
+                            <div className="grid grid-cols-6 gap-2 mt-5">
+                                {
+                                    zipCodes.map((obj, index) => <ZipCard key={index} zipcode={obj.code} index={index} onRemove={() => {const newZipCodes = zipCodes.filter((_,i) => i !== index);setZipCodes(newZipCodes)}} />)
+                                }
+                            </div>
                         </div>
+                    </div>
+                    
+                    
                     </form>
                 </Modal.Body>
+                <Modal.Footer>
+                    <div className="flex w-full justify-end">
+                        <Button>Save</Button>
+                    </div>
+                </Modal.Footer>
             </Modal>
         </>
     )

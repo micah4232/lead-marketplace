@@ -12,3 +12,9 @@ export const getCampaignList = (token, pk) => {
         headers: headers(token)
     })
 }
+
+export const getListZipCodeGroupCompany = (token, pk) => {
+    return axios.get(`company/zip-code-group/${pk}/`, {
+        headers: headers(token)
+    })
+}

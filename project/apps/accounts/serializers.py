@@ -188,3 +188,9 @@ class UserProfileSerializer(UserSerializer):
             'enable_calls_to_number' : profile.company.enable_calls_to_number,
             'payment_method' : payment_method.card
         }
+    
+
+class RadiusZipCodeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RadiusZipCode
+        fields = '__all__'
