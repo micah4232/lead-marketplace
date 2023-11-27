@@ -36,7 +36,7 @@ function Application() {
                     payment_method: data.company.payment_method
                 }))
             }).catch(error => {
-                console.log(error.response.data)
+                console.log(error)
             })
         }
     },[navigate,auth.token, dispatch, storeUser, storeCompany]);

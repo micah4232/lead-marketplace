@@ -188,9 +188,17 @@ class UserProfileSerializer(UserSerializer):
             'enable_calls_to_number' : profile.company.enable_calls_to_number,
             'payment_method' : payment_method.card
         }
-    
+
+class ZipCodesRelatedSerializers(serializers.RelatedField):
+    def to_representation(self, value):
+        return {
+            'code' : value.code,
+            'state' : value.state,
+            'city' : value.city
+        }
 
 class RadiusZipCodeSerializer(serializers.ModelSerializer):
+    zip_codes = ZipCodesRelatedSerializers(many=True, read_only=True)
     class Meta:
         model = RadiusZipCode
         fields = '__all__'

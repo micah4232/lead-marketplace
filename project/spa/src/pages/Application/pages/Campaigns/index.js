@@ -1,7 +1,7 @@
 import { FaPlus } from "react-icons/fa";
 import { useEffect, useState } from "react"
 import Card from "./components/campaignCard"
-import { getCampaignList, getListZipCodeGroupCompany } from "./api"
+import { createCampaigns, getCampaignList, getListZipCodeGroupCompany } from "./api"
 import { useSelector } from "react-redux"
 import { useDispatch } from "react-redux"
 import { storeCampaigns, storeZipCodeGroup } from "./reducers/campaignSlice"
@@ -39,6 +39,7 @@ function Campaigns() {
     })
     const [zipCodes, setZipCodes] = useState([])
     const [zip, setZip] = useState(null)
+    const [groupCode, setGroupCode] = useState("")
     const [distance, setDistance] = useState(null)
 
     useEffect(() => {
@@ -46,20 +47,21 @@ function Campaigns() {
             getCampaignList(token, company.id).then(response => {
                 dispatch(storeCampaigns(response.data))
             }).catch(error => {
-    
+                console.log(error)
             })
         }
 
-        if (!zipCodeGroup) {
+        if (zipCodeGroup) {
             getListZipCodeGroupCompany(token, company.id).then(response => {
-                console.log(response.data)
-                // dispatch(storeZipCodeGroup(response.data))
+                dispatch(storeZipCodeGroup(response.data))
             })
         }
 
         if (mainCategories.length === 0) {
             GetMainCategories().then(response => {
                 dispatch(storeMainCategories(response.data))
+            }).catch(error => {
+                console.log(error)
             })
         }
     }, [token, getCampaignList, company, storeCampaigns])
@@ -132,6 +134,33 @@ function Campaigns() {
         setZip(null)
     }
 
+    const onChangeZipCodeGroup = (event) => {
+        const newZipCodeGroup = zipCodeGroup
+        console.log(event.target.value)
+        setData({
+            ...data,
+            zip_group : (event.target.value === 'default') ? null : event.target.value
+        });
+        if (event.target.value !== 'default') {
+            setZipCodes(newZipCodeGroup.filter(obj => obj.id === parseInt(event.target.value))[0].zip_codes)
+        } else {
+            setZipCodes([])
+        }
+    }
+
+    const onSaveCampaign = () => {
+        createCampaigns(token, data).then(response => {
+            console.log(response.data)
+            setData({
+                "price": "0.00",
+                "description": "",
+                "company": null,
+                "zip_group": null,
+                "service": null
+            })
+        })
+    }
+
     return (
         <>
             <h1 className="font-extrabold text-3xl mb-5">Campaign Manager</h1>
@@ -192,18 +221,34 @@ function Campaigns() {
                             </div>
                             <div>
                                 <div className="mb-2 block">
+                                    <Label value="Cost Per Lead" />
+                                </div>
+                                <TextInput type="number" onChange={(event) => setData({...data, price : event.target.value})}/>
+                            </div>
+                            <div>
+                                <div className="mb-2 block">
                                     <Label value="Description" />
                                 </div>
-                                <Textarea placeholder="Short Description of your Campaign..." rows={10} />
+                                <Textarea placeholder="Short Description of your Campaign..." rows={10} onChange={(event)=> setData({...data, description: event.target.value})} />
                             </div>
+                            
                         </div>
                         <div>
                             <div className="mb-2 block">
                                 <Label value="Zip Code Group" className="font-bold" />
                             </div>
-                            <Select>
+                            <Select onChange={onChangeZipCodeGroup}>
                                 <option value="default">Zip Code Group</option>
+                                {
+                                    zipCodeGroup.map(obj => <option value={obj.id} key={obj.id}>{obj.name}</option>)
+                                }
                             </Select>
+                            <div className={data.zip_group === null ? 'basis-1/4 flex justify-center items-end visible' : 'basis-1/4 flex justify-center items-end invisible'}>
+                                <div className="mb-2 block">
+                                    <Label value="Zip Code Group Name" />
+                                </div>
+                                <TextInput type="text" value={groupCode} onChange={(event) => setGroupCode(event.target.value)} />
+                            </div>
                             <div className="flex flex-row gap-4 justify-center align content-center">
                                 <div className="basis-1/4">
                                     <div className="mb-2 block">
@@ -224,7 +269,7 @@ function Campaigns() {
                                 <div className="basis-1/4 flex justify-center items-end">
                                     <Button onClick={onAddZipeCode}>Add Zip Code</Button>
                                 </div>
-                                <div className="basis-1/4 flex justify-center items-end">
+                                <div className={data.zip_group === null ? 'basis-1/4 flex justify-center items-end visible' : 'basis-1/4 flex justify-center items-end invisible'}>
                                     <Button onClick={onFindZipCode}>Find Zip Code</Button>
                                 </div>
                                 {/* all zipcodes here please */}
@@ -243,7 +288,7 @@ function Campaigns() {
                 </Modal.Body>
                 <Modal.Footer>
                     <div className="flex w-full justify-end">
-                        <Button>Save</Button>
+                        <Button onClick={onSaveCampaign}>Save</Button>
                     </div>
                 </Modal.Footer>
             </Modal>

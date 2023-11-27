@@ -18,3 +18,9 @@ export const getListZipCodeGroupCompany = (token, pk) => {
         headers: headers(token)
     })
 }
+
+export const createCampaigns = (token, data) => {
+    return axios.post(`bid/create`, data, {
+        headers: headers(token)
+    })
+}
