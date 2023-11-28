@@ -1,5 +1,5 @@
 import { FaPlus } from "react-icons/fa";
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import Card from "./components/campaignCard"
 import { createCampaigns, getCampaignList, getListZipCodeGroupCompany } from "./api"
 import { useSelector } from "react-redux"
@@ -44,13 +44,11 @@ function Campaigns() {
     const [distance, setDistance] = useState("")
 
     useEffect(() => {
-        if (campaigns.length === 0) {
-            getCampaignList(token, company.id).then(response => {
-                dispatch(storeCampaigns(response.data))
-            }).catch(error => {
-                console.log(error)
-            })
-        }
+        getCampaignList(token, company.id).then(response => {
+            dispatch(storeCampaigns(response.data))
+        }).catch(error => {
+            console.log(error)
+        })
 
         if (zipCodeGroup) {
             getListZipCodeGroupCompany(token, company.id).then(response => {

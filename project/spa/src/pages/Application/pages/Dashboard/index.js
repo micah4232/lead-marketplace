@@ -4,10 +4,13 @@ import CampaignCard from "./components/CampaignCard"
 import StatementCard from "./components/StatementCard"
 import TotalCard from "./components/TotalCard"
 import { FaArrowUp, FaArrowDown } from 'react-icons/fa'
+import { useEffect, useState } from "react"
+import { getCampaignList } from "../Campaigns/api"
 
 
 function Dashboard() {
     const auth = useSelector((state) => state.authentication)
+    const [campaigns, setCampaigns] = useState([])
     const headers = [
         '',
         'Date',
@@ -34,6 +37,14 @@ function Dashboard() {
             'revenue' : ''
         }
     ]
+    useEffect(() => {
+        // get all campaigns here
+        getCampaignList(auth.token, auth.company.id).then(response => {
+            if (response.status === 200) {
+                setCampaigns(response.data)
+            }
+        })
+    }, [])
     return (
         <>
             <h2 className="mb-10 text-4xl font-bold">Welcome { auth.company.name }</h2>
@@ -169,46 +180,18 @@ function Dashboard() {
                         </li>
                     </ul>
                 </div>
-                    {/* <h1 className="text-xl font-bold p-4">Current Balance</h1>
-                    <div className="m-5">
-                        <p className="mb-5 text-xl font-bold">Current Billing Cycle</p>
-                        <div>
-                            <p className="text-5xl font-bold">$510</p>
-                            <p className="font-bold">Current Balance</p>
-                        </div>
-                        <div className="flex justify-between mt-5">
-                            <div>
-                                <p className="text-gray-300 text-3xl">$0</p>
-                                <p className="font-bold">Lead Cost</p>
-                            </div>
-                            <div>
-                                <p className="text-gray-300 text-3xl">$0</p>
-                                <p className="font-bold">Lead Credit</p>
-                            </div>
-                            <div>
-                                <p className="text-gray-300 text-3xl">$510</p>
-                                <p className="font-bold">Unpaid Statement</p>
-                            </div>
-                        </div>
-                        <div className="mt-5">
-                            <p className="font-bold text-xl">Billing Threshold</p>
-                            <p className="text-3xl"><span className="font-bold">$510</span> / $500</p>
-                            <p className="text-xs mt-5">Your credit card ending <strong>1234</strong> is billed each time your Current Balance Threshold of <strong>$500</strong> or at the end of each month if you have not reached your Threshold.</p>
-                        </div>
-                        <div className="mt-5">
-                            <p className="text-xl font-bold">Recent Statements</p>
-                            <StatementCard number="1234" date="07/18/2023" card="Card..1234" price="$10.00" paid={false} />
-                        </div>
-                    </div> */}
                 </div>
                 <div className="mt-10 border-black drop-shadow-md relative flex min-w-0 flex-col break-words rounded-2xl border-0 border-solid bg-white bg-clip-border mb-4 draggable">
                     <h1 className="text-xl font-bold p-4">Campaign Snapshot</h1>
                     <div className="p-5">
-                        <CampaignCard 
-                        name="Home Appliance Repair" 
-                        category="Market Place - Electrician - LA" 
-                        leads="12"
-                        cpl="55" />
+                        {
+                            campaigns.map(obj => <CampaignCard key={obj.id}
+                                id={obj.id}
+                                name={auth.company.name} 
+                                category={`Marketplace - ${obj.service}`}
+                                leads="12"
+                                cpl={obj.price} />)
+                        }
                     </div>
                 </div>
             </div>
