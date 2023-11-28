@@ -1,5 +1,5 @@
 import { FaPlus } from "react-icons/fa";
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import Card from "./components/campaignCard"
 import { createCampaigns, getCampaignList, getListZipCodeGroupCompany } from "./api"
 import { useSelector } from "react-redux"
@@ -33,14 +33,15 @@ function Campaigns() {
     const [data, setData] = useState({
         "price": "0.00",
         "description": "",
-        "company": null,
-        "zip_group": null,
-        "service": null
+        "company": company.id,
+        "zip_group": '',
+        "service": ''
     })
+    const [submit, setSubmit] = useState(false)
     const [zipCodes, setZipCodes] = useState([])
-    const [zip, setZip] = useState(null)
+    const [zip, setZip] = useState('')
     const [groupCode, setGroupCode] = useState("")
-    const [distance, setDistance] = useState(null)
+    const [distance, setDistance] = useState("")
 
     useEffect(() => {
         if (campaigns.length === 0) {
@@ -131,7 +132,7 @@ function Campaigns() {
                 state: ''
             }
         ])
-        setZip(null)
+        setZip('')
     }
 
     const onChangeZipCodeGroup = (event) => {
@@ -139,7 +140,7 @@ function Campaigns() {
         console.log(event.target.value)
         setData({
             ...data,
-            zip_group : (event.target.value === 'default') ? null : event.target.value
+            zip_group : (event.target.value === 'default') ? '' : event.target.value
         });
         if (event.target.value !== 'default') {
             setZipCodes(newZipCodeGroup.filter(obj => obj.id === parseInt(event.target.value))[0].zip_codes)
@@ -149,16 +150,31 @@ function Campaigns() {
     }
 
     const onSaveCampaign = () => {
-        createCampaigns(token, data).then(response => {
-            console.log(response.data)
-            setData({
-                "price": "0.00",
-                "description": "",
-                "company": null,
-                "zip_group": null,
-                "service": null
+        setSubmit(true)
+        if (data.price !== "0.00" && data.description !== '' && data.zip_group !== '' && data.service !== '') {
+            createCampaigns(token, data).then(response => {
+                if (response.status === 201) {
+                    let tempData = response.data
+                    let serve = services.filter(obj => obj.id === tempData.service)
+
+                    tempData = {
+                        ...tempData,
+                        'service':serve[0].name
+                    }
+                    dispatch(storeCampaigns([...campaigns, tempData]))
+                    setData({
+                        "price": "0.00",
+                        "description": "",
+                        "company": company.id,
+                        "zip_group": '',
+                        "service": ''
+                    })
+                }
             })
-        })
+        } else {
+            console.log('samok')
+        }
+        
     }
 
     return (
@@ -213,7 +229,7 @@ function Campaigns() {
                                 <div className="mb-2 block">
                                 <Label value="Services" />
                                 </div>
-                                <Select onChange={onChangeServices} disabled={disabled.service}>
+                                <Select onChange={onChangeServices} disabled={disabled.service} color={(submit && data.service === '') ? 'failure' : ''} helperText={(submit && data.service === '') ? <span>Please Choose Service</span> : ''}>
                                     {
                                         services.map(obj => <option value={obj.id} key={obj.id}>{obj.name}</option>)
                                     }
@@ -223,13 +239,13 @@ function Campaigns() {
                                 <div className="mb-2 block">
                                     <Label value="Cost Per Lead" />
                                 </div>
-                                <TextInput type="number" onChange={(event) => setData({...data, price : event.target.value})}/>
+                                <TextInput type="number" value={data.price} onChange={(event) => {setData({...data, price : event.target.value});setSubmit(false)}} color={(submit && data.price === '0.00') ? 'failure' : ''} helperText={(submit && data.price === '0.00') ? <span>This field is required!</span> : ''}/>
                             </div>
                             <div>
                                 <div className="mb-2 block">
-                                    <Label value="Description" />
+                                    <Label value="Description"  />
                                 </div>
-                                <Textarea placeholder="Short Description of your Campaign..." rows={10} onChange={(event)=> setData({...data, description: event.target.value})} />
+                                <Textarea placeholder="Short Description of your Campaign..." rows={10} color={(submit && data.description === '') ? 'failure' : ''} helperText={(submit && data.description === '') ? <span>Description is required!</span> : ''} onChange={(event)=> setData({...data, description: event.target.value})} />
                             </div>
                             
                         </div>
@@ -237,13 +253,13 @@ function Campaigns() {
                             <div className="mb-2 block">
                                 <Label value="Zip Code Group" className="font-bold" />
                             </div>
-                            <Select onChange={onChangeZipCodeGroup}>
+                            <Select onChange={onChangeZipCodeGroup} color={(submit && data.zip_group === '') ? 'failure' : ''} helperText={(submit && data.zip_group === '') ? <span>Please Select Zip Code or add new Zip Code Group</span> : ''}>
                                 <option value="default">Zip Code Group</option>
                                 {
                                     zipCodeGroup.map(obj => <option value={obj.id} key={obj.id}>{obj.name}</option>)
                                 }
                             </Select>
-                            <div className={data.zip_group === null ? 'basis-1/4 flex justify-center items-end visible' : 'basis-1/4 flex justify-center items-end invisible'}>
+                            <div className={data.zip_group === '' ? 'my-5 visible' : 'my-5 invisible'}>
                                 <div className="mb-2 block">
                                     <Label value="Zip Code Group Name" />
                                 </div>
@@ -269,7 +285,7 @@ function Campaigns() {
                                 <div className="basis-1/4 flex justify-center items-end">
                                     <Button onClick={onAddZipeCode}>Add Zip Code</Button>
                                 </div>
-                                <div className={data.zip_group === null ? 'basis-1/4 flex justify-center items-end visible' : 'basis-1/4 flex justify-center items-end invisible'}>
+                                <div className={data.zip_group === '' ? 'basis-1/4 flex justify-center items-end visible' : 'basis-1/4 flex justify-center items-end invisible'}>
                                     <Button onClick={onFindZipCode}>Find Zip Code</Button>
                                 </div>
                                 {/* all zipcodes here please */}
@@ -287,8 +303,9 @@ function Campaigns() {
                     </form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <div className="flex w-full justify-end">
-                        <Button onClick={onSaveCampaign}>Save</Button>
+                    <div className="flex w-full justify-end gap-4">
+                        <Button onClick={onSaveCampaign} color="success">Save</Button>
+                        <Button onClick={() => setModal(false)} color="failure">Cancel</Button>
                     </div>
                 </Modal.Footer>
             </Modal>

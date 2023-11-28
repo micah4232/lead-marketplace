@@ -9,8 +9,6 @@ from apps.accounts.models import Company
 # Create your views here.
 class CreateBidAPIView(CreateAPIView):
     permission_classes = [IsAuthenticated]
-
-    queryset = Bid.objects.all()
     serializer_class = BidSerializers
 
 class BulkCreateBidAPIView(CreateAPIView):
