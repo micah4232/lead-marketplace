@@ -8,6 +8,7 @@ class Bid (models.Model):
     company = models.ForeignKey(Company, on_delete=models.SET_NULL, null=True)
     zip_group = models.ForeignKey(RadiusZipCode, on_delete=models.SET_NULL, null=True)
     service = models.ForeignKey(ServiceCategories, on_delete=models.SET_NULL, null=True)
+    description = models.TextField(blank=True, null=True)
 
     def __str__(self) -> str:
         return f'{self.company.name} | {self.service.name}'

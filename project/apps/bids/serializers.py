@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from .models import Bid
 from apps.accounts.models import Company
+from apps.accounts.serializers import ZipCodesRelatedSerializers
+
 
 class BidSerializers(serializers.ModelSerializer):
     class Meta:
@@ -26,6 +28,8 @@ class BulkSavingSerializers(serializers.Serializer):
 
 
 class ListBidSerializers(serializers.ModelSerializer):
+    service = serializers.StringRelatedField()
+    
     class Meta:
         model = Bid
         fields = '__all__'

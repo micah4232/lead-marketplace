@@ -181,9 +181,24 @@ class UserProfileSerializer(UserSerializer):
         customer = Customer.objects.get(subscriber=obj.id)
         payment_method = PaymentMethod.objects.get(customer=customer.id)
         return {
+            'id' : profile.company.id,
             'name' : profile.company.name,
             'website' : profile.company.website,
             'phone_number_for_lead' : profile.company.phone_number_for_lead,
             'enable_calls_to_number' : profile.company.enable_calls_to_number,
             'payment_method' : payment_method.card
         }
+
+class ZipCodesRelatedSerializers(serializers.RelatedField):
+    def to_representation(self, value):
+        return {
+            'code' : value.code,
+            'state' : value.state,
+            'city' : value.city
+        }
+
+class RadiusZipCodeSerializer(serializers.ModelSerializer):
+    zip_codes = ZipCodesRelatedSerializers(many=True, read_only=True)
+    class Meta:
+        model = RadiusZipCode
+        fields = '__all__'

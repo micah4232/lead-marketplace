@@ -1,4 +1,5 @@
 import CompanySettings from "./partials/companySettings";
+import DeveloperSettings from "./partials/developerSettings";
 import NameHeader from "./partials/nameHeader";
 import Settings from "./partials/settings";
 
@@ -15,6 +16,9 @@ export default function Profile() {
                         </div>
                         <div className="relative basis-1/3 h-full min-w-0 break-words bg-white border-0 shadow-soft-xl rounded-2xl bg-clip-border">
                             <CompanySettings />
+                        </div>
+                        <div className="relative basis-1/3 h-full min-w-0 break-words bg-white border-0 shadow-soft-xl rounded-2xl bg-clip-border">
+                            <DeveloperSettings />
                         </div>
                     </div>
                 </div>

@@ -28,6 +28,7 @@ function Application() {
                 }));
                 dispatch(storeCompany({
                     ...auth.company,
+                    id : data.company.id,
                     name : data.company.name,
                     website : data.company.website,
                     phone_number : data.company.phone_number_for_lead,
@@ -35,7 +36,7 @@ function Application() {
                     payment_method: data.company.payment_method
                 }))
             }).catch(error => {
-                console.log(error.response.data)
+                console.log(error)
             })
         }
     },[navigate,auth.token, dispatch, storeUser, storeCompany]);

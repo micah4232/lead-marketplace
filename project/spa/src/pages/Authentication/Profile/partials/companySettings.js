@@ -19,7 +19,6 @@ export default function CompanySettings() {
                     </ul>
                 </div>
             </div>
-            
         </>
     )
 }

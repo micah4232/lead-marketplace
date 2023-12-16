@@ -7,6 +7,7 @@ from .views import (
     GetProfileAPIView,
     CreateCompanyZipCodeAPIView,
     RetrieveUpdateDeleteCompanyAPIVIew,
+    ListZipCodeGroupAPIView
 )
 
 urlpatterns = [
@@ -17,4 +18,5 @@ urlpatterns = [
     path('get-company-id-by-user/<int:id>/', GetProfileAPIView.as_view(), name='get-profile-by-user'),
     path('zipcode-list/', CreateCompanyZipCodeAPIView.as_view(), name='company-zipcode-list'),
     path('<int:pk>/', RetrieveUpdateDeleteCompanyAPIVIew.as_view(), name="update-retrieve-delete-company"),
+    path('zip-code-group/<int:pk>/', ListZipCodeGroupAPIView.as_view(), name='zip-code-group-list')
 ]

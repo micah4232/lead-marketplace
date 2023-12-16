@@ -137,7 +137,7 @@ function Registration() {
             } else {
                 // save to database.
                 if (!bulkSaved) {
-                    CreateBulkBid(selectedServices, company.id).then(response => {
+                    CreateBulkBid(selectedServices, company).then(response => {
                         setBulkSaved(true)
                     }).catch(error => {
                         dispatch(onAlertShow({
