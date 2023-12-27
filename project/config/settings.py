@@ -156,11 +156,12 @@ REST_FRAMEWORK = {
     ),
 }
 
-FRONTEND_URL = 'http://localhost:3000'
+FRONTEND_URL = 'http://dminozadev.pythonanywhere.com'
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
+    "http://dminozadev.pythonanywhere.com"
 ]
 
 # CORS_ALLOW_ALL_ORIGINS = True
