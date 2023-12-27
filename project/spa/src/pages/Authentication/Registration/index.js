@@ -92,6 +92,12 @@ function Registration() {
                             alert: 'error',
                             message: error.response.data.confirm[0] == 'This field may not be blank.' ? 'Confirm password must not be blank' : error.response.data.confirm[0]
                         }))
+                    } else if (error.response.data.username) {
+                        dispatch(onAlertShow({
+                            show : true,
+                            alert: 'error',
+                            message : error.response.data.username[0]
+                        }))
                     } else {
                         dispatch(onAlertShow({
                             show:true,
