@@ -68,11 +68,11 @@ function Registration() {
                         // dispatch(storeIsVerified(true));
                     }
                 }).catch(error => {
-                    if (error.response.data.website) {
+                    if (error.response.data.company) {
                         dispatch(onAlertShow({
                             show:true,
                             alert: 'error',
-                            message: error.response.data.website[0]
+                            message: error.response.data.company.website[0]
                         }))
                     } else if (error.response.data.email) {
                         dispatch(onAlertShow({
