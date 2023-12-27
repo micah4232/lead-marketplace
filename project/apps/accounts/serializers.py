@@ -97,7 +97,10 @@ class RegistrationSerializer(UserCreateSerializer):
         with transaction.atomic():
             user = User.objects.create_user(**validated_data)
             # create a customer with payment intent
-            Customer.create(subscriber=user)
+            try:
+                Customer.create(subscriber=user)
+            except:
+                user
             # create token here
             if settings.SEND_ACTIVATION_EMAIL:
                 user.is_active = False
