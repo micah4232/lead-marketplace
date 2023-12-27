@@ -10,6 +10,8 @@ djangorestframework = "*"
 django-cors-headers = "*"
 django-environ = "*"
 djoser = "*"
+plivo = "*"
+twilio = "*"
 
 [dev-packages]
 
