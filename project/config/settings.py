@@ -208,6 +208,7 @@ STRIPE_TEST_SECRET_KEY = env("STRIPE_TEST_SECRET_KEY")
 DJSTRIPE_WEBHOOK_SECRET = env('DJSTRIPE_WEBHOOK_SECRET')  # Get it from the section in the Stripe dashboard where you added the webhook endpoint
 # DJSTRIPE_USE_NATIVE_JSONFIELD = True  # We recommend setting to True for new installations
 DJSTRIPE_FOREIGN_KEY_TO_FIELD = "id"
+DJSTRIPE_WEBHOOK_VALIDATION=None
 
 # TWILIO API HERE
 TWILIO_ACCOUNT_SID = env("TWILIO_ACCOUNT_SID", default="")
